@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="fpempresa" default="default" basedir=".">
+    <description>Crea y configura todos los servidores de fpempresa</description>
+  
+    <target name="default"  >        
+
+
+    </target>
+
+
+	<target name="deploy-produccion">
+	</target>
+	
+	<target name="deploy-preproduccion">
+	</target>
+	
+	<target name="deploy-pruebas">
+	</target>
+
+
+	<target name="create-server-produccion">
+	</target>
+	
+	<target name="create-server-preproduccion">
+	</target>
+	
+	<target name="create-server-pruebas">
+	</target>
+	
+	<target name="create-server-desarrollo">
+	</target>
+	
+	<target name="create-server-log">
+	</target>
+	
+	
+
+	<target name="backup-database-produccion">
+	</target>
+	
+	<target name="backup-database-preproduccion">
+	</target>
+	
+	<target name="backup-database-pruebas">
+	</target>
+
+	
+	
+	<target name="restore-database-produccion">
+	</target>
+	
+	<target name="restore-database-preproduccion">
+	</target>
+	
+	<target name="restore-database-pruebas">
+	</target>
+ 
+ 	
+	
+</project>
