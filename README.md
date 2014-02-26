@@ -8,7 +8,7 @@ Es necesario tener instalado el JDK 7 y la herramienta Apache Ant
 
 ## Configuracion 
 Antes de poder ejecutar el Scrip de cracion de los servidores es necesario definir las siguientes propiedades
-en el fichero proyecto.properties
+en el fichero `proyecto.properties`
 
 ## Creacion
 
