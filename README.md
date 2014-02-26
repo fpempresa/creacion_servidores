@@ -47,6 +47,12 @@ con el siguiente contenido:
 	GOOGLE_PRUEBAS_CLIENT_ID=
 	GOOGLE_PRUEBAS_CLIENT_SECRET=
 
+	#Copia de seguridad extra por FTP
+	FTP_BACKUP_USER=
+	FTP_BACKUP_PASSWORD=
+	FTP_BACKUP_HOST=
+	FTP_BACKUP_FILENAME=
+	
 ## Creacion
 
 En el directorio raiz del proyecto ejecutar:
