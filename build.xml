@@ -2,59 +2,97 @@
 <project name="fpempresa" default="default" basedir=".">
     <description>Crea y configura todos los servidores de fpempresa</description>
   
-    <target name="default"  >        
+    <target name="default" depends="-configureAnt" >        
+		<property file="proyecto.properties "/>
+		
+		
+		
+		<createdomain userName="${OPENSHIFT_DESARROLLO_LOGIN}" password="${OPENSHIFT_DESARROLLO_PASSWORD}" domainName="dev${APP_NAME}" />
+		<createapplication userName="${OPENSHIFT_DESARROLLO_LOGIN}" password="${OPENSHIFT_DESARROLLO_PASSWORD}" domainName="dev${APP_NAME}" applicationName="jenkins" cartridgeName="jenkins" scalable="true"  />
 
-
+		<property name="SSH_KEYS_FOLDER" value="../.ssh-${APP_NAME}" />
+		<property name="DESARROLLO_KEY" value="${SSH_KEYS_FOLDER}/devkey" />
+		
+		<mkdir dir="${SSH_KEYS_FOLDER}" />
+		
+		<createkeypair fileName="${DESARROLLO_KEY}" />
+		
+		<addpublickey userName="${OPENSHIFT_DESARROLLO_LOGIN}" password="${OPENSHIFT_DESARROLLO_PASSWORD}" name="default" filePublicKey="${DESARROLLO_KEY}.pub" />
+		
+		
+		
     </target>
 
 
-	<target name="deploy-produccion">
+	<target name="deploy-produccion" depends="-configureAnt" >
+	
 	</target>
 	
-	<target name="deploy-preproduccion">
+	<target name="deploy-preproduccion" depends="-configureAnt" >
 	</target>
 	
-	<target name="deploy-pruebas">
-	</target>
-
-
-	<target name="create-server-produccion">
-	</target>
-	
-	<target name="create-server-preproduccion">
-	</target>
-	
-	<target name="create-server-pruebas">
-	</target>
-	
-	<target name="create-server-desarrollo">
-	</target>
-	
-	<target name="create-server-log">
-	</target>
-	
-	
-
-	<target name="backup-database-produccion">
-	</target>
-	
-	<target name="backup-database-preproduccion">
-	</target>
-	
-	<target name="backup-database-pruebas">
+	<target name="deploy-pruebas" depends="-configureAnt" >
 	</target>
 
-	
-	
-	<target name="restore-database-produccion">
+
+	<target name="create-server-produccion" depends="-configureAnt" >
 	</target>
 	
-	<target name="restore-database-preproduccion">
+	<target name="create-server-preproduccion" depends="-configureAnt" >
 	</target>
 	
-	<target name="restore-database-pruebas">
+	<target name="create-server-pruebas" depends="-configureAnt" >
+	</target>
+	
+	<target name="create-server-desarrollo" depends="-configureAnt" >
+	</target>
+	
+	<target name="create-server-log" depends="-configureAnt" >
+	</target>
+	
+	
+
+	<target name="backup-database-produccion" depends="-configureAnt" >
+	</target>
+	
+	<target name="backup-database-preproduccion" depends="-configureAnt" >
+	</target>
+	
+	<target name="backup-database-pruebas" depends="-configureAnt" >
+	</target>
+
+	
+	
+	<target name="restore-database-produccion" depends="-configureAnt" >
+	</target>
+	
+	<target name="restore-database-preproduccion" depends="-configureAnt" >
+	</target>
+	
+	<target name="restore-database-pruebas" depends="-configureAnt" >
 	</target>
  
- 	
+    <target name="-configureAnt">
+        <echo>Configurando librerias de Ant</echo>
+
+        <property name="libAnt.path" value="libant" />
+
+        <path id="libAnt.classpath">
+            <fileset dir="${libAnt.path}">
+                <include name="**/*.jar" />
+            </fileset>
+        </path>
+		
+		<!-- OpenShift -->
+		<taskdef classpathref="libAnt.classpath" resource="es/logongas/openshift/ant/antlib.xml" />
+        <!-- El try-cath -->
+        <taskdef classpathref="libAnt.classpath" resource="net/sf/antcontrib/antcontrib.properties"/>
+        <!-- Manejo de ficheros XML -->
+        <taskdef classpathref="libAnt.classpath" name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+		<!-- Flyway -->
+       <taskdef classpathref="libAnt.classpath" resource="com/googlecode/flyway/ant/antlib.xml" />
+	   <!-- Cargar todas las variables de entorno -->
+	   <property environment="env"/>
+    </target> 	
 	
 </project>

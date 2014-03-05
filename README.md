@@ -4,12 +4,16 @@
 Script para la creación de todos los servidores de FPempresa
 
 ## Prerequisitos
-Es necesario tener instalado el JDK 7 y la herramienta Apache Ant
+Es necesario tener instalado Git, el JDK 7 y la herramienta Apache Ant
 
 ## Configuracion 
 Antes de poder ejecutar el Scrip de cracion de los servidores es necesario definir las siguientes propiedades
 en el fichero `proyecto.properties` .Este fichero no existe en el repositirio y debe ser creado manualmente 
 con el siguiente contenido:
+
+	#La contrasenya de los servicios que se instalan , no de los servidores de openshift
+	SERVICES_MASTER_PASSWORD=
+	APP_NAME=fpempresa
 
 	OPENSHIFT_PRODUCCION_LOGIN=@fpmislata.com
 	OPENSHIFT_PRODUCCION_PASSWORD=
@@ -34,9 +38,7 @@ con el siguiente contenido:
 	GIT_REPOSITORY_ELASTICSEARCH=https://github.com/fpempresa/servidor_elasticsearch.git
 	GIT_REPOSITORY_KIBANA=https://github.com/fpempresa/servidor_kibana.git
 
-	
-	#La contrasenya de los servicios que se instalan , no de los servidores de openshift
-	SERVICES_MASTER_PASSWORD=
+
 
 	
 	#OAuth para hacer las copias de seguridad de la base de datos
