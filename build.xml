@@ -7,16 +7,6 @@
 		
 		
 		
-		<createdomain userName="${OPENSHIFT_DESARROLLO_LOGIN}" password="${OPENSHIFT_DESARROLLO_PASSWORD}" domainName="dev${APP_NAME}" />
-		<createapplication userName="${OPENSHIFT_DESARROLLO_LOGIN}" password="${OPENSHIFT_DESARROLLO_PASSWORD}" domainName="dev${APP_NAME}" applicationName="jenkins" cartridgeName="jenkins" scalable="true"  />
-
-		
-		<createkeypair fileName="${DESARROLLO_KEY}" />
-		
-		<addpublickey userName="${OPENSHIFT_DESARROLLO_LOGIN}" password="${OPENSHIFT_DESARROLLO_PASSWORD}" name="default" filePublicKey="${DESARROLLO_KEY}.pub" />
-		
-		
-		
     </target>
 
 
@@ -78,14 +68,14 @@
 		<delete includeEmptyDirs="true" >
 		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_ELASTICSEARCH}" includes="**/*"/>
 		</delete>		
-		
+	
 	</target>	
 	
 	<target name="deploy-log-logstash" depends="-configureAnt" >
 		<property name="LOCAL_PATH_GIT_LOGSTASH" value="${env.TMP}/${APP_NAME}/${LOG_DOMAIN}/${LOGSTASH_APPLICATION}" />
 	
 	
-		<delete includeEmptyDirs="true" >
+		<delete  includeEmptyDirs="true" failonerror="false" >
 		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_LOGSTASH}" includes="**/*"/>
 		</delete>	
 		<mkdir dir="${LOCAL_PATH_GIT_LOGSTASH}" />
@@ -104,6 +94,7 @@
 			options="add upstream -m master ${GIT_REPOSITORY_LOGSTASH}"
 			dir="${LOCAL_PATH_GIT_LOGSTASH}"
 		/>
+	
 		<git 
 			command="pull" 
 			options="-s recursive -X theirs upstream master"
@@ -122,7 +113,7 @@
 		<delete includeEmptyDirs="true" >
 		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_LOGSTASH}" includes="**/*"/>
 		</delete>		
-		
+	
 	</target>	
 	
 		
