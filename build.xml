@@ -8,10 +8,51 @@
 		
 		
     </target>
-
+	
 
 	<target name="deploy-produccion" depends="-configureAnt" >
+		<configureserver 
+			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
+			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
+			domainName="${PRODUCCION_DOMAIN}" 
+			applicationName="${PRODUCCION_APPLICATION}" 
+			gitrepository="${GIT_REPOSITORY_APP}" 
+			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"
+		>	
+			<git 
+				command="rm" 
+				options="pom.xml"
+				dir="${LOCAL_PATH_GIT}"
+				failerror="false"
+			/>
+			<git 
+				command="rm" 
+				options="-r src"
+				dir="${LOCAL_PATH_GIT}"
+				failerror="false"
+			/>	
+			<copy file="../${APP_NAME}/dist/${APP_NAME}.war" tofile="${LOCAL_PATH_GIT}/webapps/ROOT.war" overwrite="true" />
+			<git 
+				command="add " 
+				options="*"
+				dir="${LOCAL_PATH_GIT}"
+				failerror="false"
+			/>
+			
+		</configureserver>
+		
+<!--		
+		<configureserver 
+			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
+			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
+			domainName="${PRODUCCION_DOMAIN}" 
+			applicationName="${PRODUCCION_LOGSTASH_APPLICATION}" 
+			gitrepository="${GIT_REPOSITORY_LOGSTASH}" 
+			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"
+		/>			
+-->		
 	
+		
 	</target>
 	
 	<target name="deploy-preproduccion" depends="-configureAnt" >
@@ -27,221 +68,59 @@
 	</target>	
 	
 	<target name="deploy-log-elasticsearch" depends="-configureAnt" >
-		<property name="LOCAL_PATH_GIT_ELASTICSEARCH" value="${env.TMP}/${APP_NAME}/${LOG_DOMAIN}/${ELASTICSEARCH_APPLICATION}" />
-	
-		<delete includeEmptyDirs="true" >
-		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_ELASTICSEARCH}" includes="**/*"/>
-		</delete>
-		<mkdir dir="${LOCAL_PATH_GIT_ELASTICSEARCH}" />
-	
-		<gitcloneapplication     
+		<configureserver 
 			userName="${OPENSHIFT_LOG_LOGIN}" 
 			password="${OPENSHIFT_LOG_PASSWORD}" 
 			domainName="${LOG_DOMAIN}" 
-			applicationName="${ELASTICSEARCH_APPLICATION}"  
+			applicationName="${ELASTICSEARCH_APPLICATION}" 
+			gitrepository="${GIT_REPOSITORY_ELASTICSEARCH}" 
 			privateKeyFile="${LOG_PRIVATE_KEY}"
-			path="${LOCAL_PATH_GIT_ELASTICSEARCH}"
-		/>
-		
-		<git 
-			command="remote" 
-			options="add upstream -m master ${GIT_REPOSITORY_ELASTICSEARCH}"
-			dir="${LOCAL_PATH_GIT_ELASTICSEARCH}"
-		/>
-		
-		
-		<git 
-			command="pull" 
-			options="-s recursive -X theirs upstream master"
-			dir="${LOCAL_PATH_GIT_ELASTICSEARCH}"
 		/>			
-		
-		<echo>Iniciando push</echo>
-		<gitpushapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${ELASTICSEARCH_APPLICATION}"  
-			privateKeyFile="${LOG_PRIVATE_KEY}"
-			path="${LOCAL_PATH_GIT_ELASTICSEARCH}"
-		/>
-				
-	
 	</target>	
 	<target name="deploy-log-kibana" depends="-configureAnt" >
-		<property name="LOCAL_PATH_GIT_KIBANA" value="${env.TMP}/${APP_NAME}/${LOG_DOMAIN}/${KIBANA_APPLICATION}" />
-	
-	
-		<delete includeEmptyDirs="true" >
-		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_KIBANA}" includes="**/*"/>
-		</delete>	
-		<mkdir dir="${LOCAL_PATH_GIT_KIBANA}" />
-	
-		<gitcloneapplication     
+		<configureserver 
 			userName="${OPENSHIFT_LOG_LOGIN}" 
 			password="${OPENSHIFT_LOG_PASSWORD}" 
 			domainName="${LOG_DOMAIN}" 
-			applicationName="${KIBANA_APPLICATION}"  
+			applicationName="${KIBANA_APPLICATION}" 
+			gitrepository="${GIT_REPOSITORY_KIBANA}" 
 			privateKeyFile="${LOG_PRIVATE_KEY}"
-			path="${LOCAL_PATH_GIT_KIBANA}"
 		/>
-
-		<git 
-			command="remote" 
-			options="add upstream -m master ${GIT_REPOSITORY_KIBANA}"
-			dir="${LOCAL_PATH_GIT_KIBANA}"
-		/>
-		<git 
-			command="pull" 
-			options="-s recursive -X theirs upstream master"
-			dir="${LOCAL_PATH_GIT_KIBANA}"
-		/>			
-		
-		<echo>Iniciando push</echo>
-		<gitpushapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${KIBANA_APPLICATION}"  
-			privateKeyFile="${LOG_PRIVATE_KEY}"
-			path="${LOCAL_PATH_GIT_KIBANA}"
-		/>
-				
-		
 	</target>
 
-
+	
+	
 	<target name="create-server-produccion" depends="-configureAnt" >
-	
-		<removeallpublickeys 
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
+		<createserverapp 
+			userName="${OPENSHIFT_PRODUCCION_LOGIN}"  
 			password="${OPENSHIFT_PRODUCCION_PASSWORD}"  
-		/>
-		<destroyalldomains     
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			force="true" 
-		/>
-	
-		<createkeypair     
-			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"
-		/>
-		<addpublickey     
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			publicKeyName="ant" 
-			publicKeyFile="${PRODUCCION_PUBLIC_KEY}"
-		/>
-		<createdomain     
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			domainName="${PRODUCCION_DOMAIN}" 
-			
-		/>
-		<createapplication     
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			domainName="${PRODUCCION_DOMAIN}" 
+			domainName="${PRODUCCION_DOMAIN}"  
 			applicationName="${PRODUCCION_APPLICATION}"  
-			cartridgeName="jbossews-2.0"
-			gearProfileName="small"
-			scalable="true"
-		/>
-		<addcartridge     
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			domainName="${PRODUCCION_DOMAIN}" 
-			applicationName="${PRODUCCION_APPLICATION}"  
-			cartridgeName="mysql-5.5" 
-		/>
+			logapplicationName="${PRODUCCION_LOGSTASH_APPLICATION}"  
+			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"   
+		/>	
 	</target>
 	
 	<target name="create-server-preproduccion" depends="-configureAnt" >
-		<removeallpublickeys 
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
+		<createserverapp 
+			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}"  
 			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}"  
-		/>
-		<destroyalldomains     
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
-			force="true" 
-		/>
-	
-		<createkeypair     
-			privateKeyFile="${PREPRODUCCION_PRIVATE_KEY}"
-		/>
-		<addpublickey     
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
-			publicKeyName="ant" 
-			publicKeyFile="${PREPRODUCCION_PUBLIC_KEY}"
-		/>
-		<createdomain     
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
-			domainName="${PREPRODUCCION_DOMAIN}" 
-			
-		/>
-		<createapplication     
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
-			domainName="${PREPRODUCCION_DOMAIN}" 
+			domainName="${PREPRODUCCION_DOMAIN}"  
 			applicationName="${PREPRODUCCION_APPLICATION}"  
-			cartridgeName="jbossews-2.0"
-			gearProfileName="small"
-			scalable="true"
-		/>
-		<addcartridge     
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
-			domainName="${PREPRODUCCION_DOMAIN}" 
-			applicationName="${PREPRODUCCION_APPLICATION}"  
-			cartridgeName="mysql-5.5" 
-		/>	
+			logapplicationName="${PREPRODUCCION_LOGSTASH_APPLICATION}"  
+			privateKeyFile="${PREPRODUCCION_PRIVATE_KEY}"   
+		/>			
 	</target>
 	
 	<target name="create-server-pruebas" depends="-configureAnt" >
-		<removeallpublickeys 
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
+		<createserverapp 
+			userName="${OPENSHIFT_PRUEBAS_LOGIN}"  
 			password="${OPENSHIFT_PRUEBAS_PASSWORD}"  
-		/>
-		<destroyalldomains     
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}" 
-			force="true" 
-		/>
-	
-		<createkeypair     
-			privateKeyFile="${PRUEBAS_PRIVATE_KEY}"
-		/>
-		<addpublickey     
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}" 
-			publicKeyName="ant" 
-			publicKeyFile="${PRUEBAS_PUBLIC_KEY}"
-		/>
-		<createdomain     
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}" 
-			domainName="${PRUEBAS_DOMAIN}" 
-			
-		/>
-		<createapplication     
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}" 
-			domainName="${PRUEBAS_DOMAIN}" 
+			domainName="${PRUEBAS_DOMAIN}"  
 			applicationName="${PRUEBAS_APPLICATION}"  
-			cartridgeName="jbossews-2.0"
-			gearProfileName="small"
-			scalable="true"
+			logapplicationName="${PRUEBAS_LOGSTASH_APPLICATION}"  
+			privateKeyFile="${PRUEBAS_PRIVATE_KEY}"   
 		/>
-		<addcartridge     
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}" 
-			domainName="${PRUEBAS_DOMAIN}" 
-			applicationName="${PRUEBAS_APPLICATION}"  
-			cartridgeName="mysql-5.5" 
-		/>	
 	</target>
 	
 	<target name="create-server-desarrollo" depends="-configureAnt" >
@@ -345,19 +224,16 @@
 		<mkdir dir="${SSH_KEYS_FOLDER}" />
 		
 		<property name="PRODUCCION_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pro_rsa" />
-		<property name="PRODUCCION_PUBLIC_KEY" value="${PRODUCCION_PRIVATE_KEY}.pub" />
 		<property name="PRODUCCION_DOMAIN" value="pro${APP_NAME}" />
 		<property name="PRODUCCION_APPLICATION" value="app" />
 		<property name="PRODUCCION_LOGSTASH_APPLICATION" value="logstash" />
 		
 		<property name="PREPRODUCCION_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pre_rsa" />
-		<property name="PREPRODUCCION_PUBLIC_KEY" value="${PREPRODUCCION_PRIVATE_KEY}.pub" />
 		<property name="PREPRODUCCION_DOMAIN" value="pre${APP_NAME}" />
 		<property name="PREPRODUCCION_APPLICATION" value="app" />
 		<property name="PREPRODUCCION_LOGSTASH_APPLICATION" value="logstash" />
 		
 		<property name="PRUEBAS_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pru_rsa" />
-		<property name="PRUEBAS_PUBLIC_KEY" value="${PRUEBAS_PRIVATE_KEY}.pub" />
 		<property name="PRUEBAS_DOMAIN" value="pru${APP_NAME}" />
 		<property name="PRUEBAS_APPLICATION" value="app" />
 		<property name="PRUEBAS_LOGSTASH_APPLICATION" value="logstash" />
@@ -377,5 +253,163 @@
 		
     </target> 	
 		
+    <macrodef name="createserverapp">
+        <attribute name="userName" />
+        <attribute name="password"  />
+        <attribute name="domainName"  />
+        <attribute name="applicationName" />
+		<attribute name="logapplicationName" />
+        <attribute name="privateKeyFile"  />
+        <sequential>
+			<echo>Creando Servidor de Aplicaciones en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>
+			
+			<echo>Borrando claves existentes</echo>
+			<removeallpublickeys 
+				userName="@{userName}" 
+				password="@{password}"  
+			/>
+			
+			<echo>Borrando dominios</echo>
+			<destroyalldomains     
+				userName="@{userName}" 
+				password="@{password}" 
+				force="true" 
+			/>
+			
+			<echo>Creando en @{privateKeyFile} el par de calve publica/privada</echo>
+			<createkeypair     
+				privateKeyFile="@{privateKeyFile}"
+			/>
+			
+			<echo>Anyadiendo las calve publicas a la cuenta de Openshift</echo>
+			<addpublickey     
+				userName="@{userName}" 
+				password="@{password}" 
+				publicKeyName="ant" 
+				publicKeyFile="@{privateKeyFile}.pub"
+			/>
+			
+			<echo>Creando el dominio @{domainName}</echo>
+			<createdomain     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				
+			/>
+			
+			<echo>Creando la aplicacion @{applicationName}</echo>
+			<createapplication     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				cartridgeName="jbossews-2.0"
+				gearProfileName="small"
+				scalable="true"
+			/>
+			
+			<addenvironmentvariable     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				environmentVariableName="OPENSHIFT_MYSQL_LOWER_CASE_TABLE_NAMES" 
+				environmentVariableValue="1"
+			/>			
+			
+			<echo>Anyadiendo Base de datos</echo>
+			<addcartridge     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				cartridgeName="mysql-5.5" 
+			/>
+
+			<echo>Creando servidor de log</echo>
+			<createapplication     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{logapplicationName}"  
+				cartridgeName="diy-0.1"
+				gearProfileName="small"
+				scalable="false"
+			/>
+
+			<echo>Finalizado la creacion del servidor de aplicaciones</echo>
+			
+        </sequential>
+    </macrodef> 
 	
+    <macrodef name="configureserver">
+        <attribute name="userName" />
+        <attribute name="password"  />
+        <attribute name="domainName"  />
+        <attribute name="applicationName" />
+		<attribute name="gitrepository" />
+        <attribute name="privateKeyFile"  />
+		<element name="precommit" optional="yes" implicit="true"  />
+        <sequential>	
+			<echo>configurando servidor desde repositorio git en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>	
+			<echo>repositorio git:@{gitrepository}</echo>
+		
+			<property name="LOCAL_PATH_GIT" value="${env.TMP}/${APP_NAME}/@{domainName}/@{applicationName}" />
+			<echo>Directorio local del repositorio:${LOCAL_PATH_GIT}</echo>
+		
+			<echo>Borrando los ficheros que pudiera haber en el directorio local</echo>
+			<delete  includeEmptyDirs="true" failonerror="false" >
+			  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT}" includes="**/*"/>
+			</delete>	
+			<mkdir dir="${LOCAL_PATH_GIT}" />
+		
+			<echo>Clonando repositorio git del servidor en OpenShift</echo>
+			<gitcloneapplication     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				privateKeyFile="@{privateKeyFile}"
+				path="${LOCAL_PATH_GIT}"
+			/>
+
+			
+			<git 
+				command="remote" 
+				options="add upstream -m master @{gitrepository}"
+				dir="${LOCAL_PATH_GIT}"
+			/>
+		
+			<echo>Pull del repositorio remoto:@{gitrepository}</echo>
+			<git 
+				command="pull" 
+				options="-s recursive -X theirs upstream master"
+				dir="${LOCAL_PATH_GIT}"
+			/>	
+			
+			<echo>Realizando tareas especificas de prepush</echo>
+			<precommit />
+			
+			<git 
+				command="commit" 
+				options="-am nueva_sersion_de_la_app_"
+				dir="${LOCAL_PATH_GIT}"
+				failerror="false"
+			/>
+			
+			<echo>Iniciando push a OpenShift</echo>
+			<gitpushapplication     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				privateKeyFile="@{privateKeyFile}"
+				path="${LOCAL_PATH_GIT}"
+			/>
+
+		
+			<echo>Finalizado la configuracion del servidor</echo>
+			
+        </sequential>
+    </macrodef> 
 </project>
