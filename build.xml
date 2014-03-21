@@ -23,7 +23,7 @@
 	<target name="deploy-desarrollo" depends="-configureAnt" >
 	</target>	
 	
-	<target name="deploy-log" depends="-configureAnt,deploy-log-elasticsearch,deploy-log-logstash,deploy-log-kibana" >	
+	<target name="deploy-log" depends="-configureAnt,deploy-log-elasticsearch,deploy-log-kibana" >	
 	</target>	
 	
 	<target name="deploy-log-elasticsearch" depends="-configureAnt" >
@@ -56,6 +56,7 @@
 			dir="${LOCAL_PATH_GIT_ELASTICSEARCH}"
 		/>			
 		
+		<echo>Iniciando push</echo>
 		<gitpushapplication     
 			userName="${OPENSHIFT_LOG_LOGIN}" 
 			password="${OPENSHIFT_LOG_PASSWORD}" 
@@ -64,59 +65,9 @@
 			privateKeyFile="${LOG_PRIVATE_KEY}"
 			path="${LOCAL_PATH_GIT_ELASTICSEARCH}"
 		/>
-		
-		<delete includeEmptyDirs="true" >
-		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_ELASTICSEARCH}" includes="**/*"/>
-		</delete>		
+				
 	
 	</target>	
-	
-	<target name="deploy-log-logstash" depends="-configureAnt" >
-		<property name="LOCAL_PATH_GIT_LOGSTASH" value="${env.TMP}/${APP_NAME}/${LOG_DOMAIN}/${LOGSTASH_APPLICATION}" />
-	
-	
-		<delete  includeEmptyDirs="true" failonerror="false" >
-		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_LOGSTASH}" includes="**/*"/>
-		</delete>	
-		<mkdir dir="${LOCAL_PATH_GIT_LOGSTASH}" />
-	
-		<gitcloneapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-			privateKeyFile="${LOG_PRIVATE_KEY}"
-			path="${LOCAL_PATH_GIT_LOGSTASH}"
-		/>
-
-		<git 
-			command="remote" 
-			options="add upstream -m master ${GIT_REPOSITORY_LOGSTASH}"
-			dir="${LOCAL_PATH_GIT_LOGSTASH}"
-		/>
-	
-		<git 
-			command="pull" 
-			options="-s recursive -X theirs upstream master"
-			dir="${LOCAL_PATH_GIT_LOGSTASH}"
-		/>			
-		
-		<gitpushapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-			privateKeyFile="${LOG_PRIVATE_KEY}"
-			path="${LOCAL_PATH_GIT_LOGSTASH}"
-		/>
-		
-		<delete includeEmptyDirs="true" >
-		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_LOGSTASH}" includes="**/*"/>
-		</delete>		
-	
-	</target>	
-	
-		
 	<target name="deploy-log-kibana" depends="-configureAnt" >
 		<property name="LOCAL_PATH_GIT_KIBANA" value="${env.TMP}/${APP_NAME}/${LOG_DOMAIN}/${KIBANA_APPLICATION}" />
 	
@@ -146,6 +97,7 @@
 			dir="${LOCAL_PATH_GIT_KIBANA}"
 		/>			
 		
+		<echo>Iniciando push</echo>
 		<gitpushapplication     
 			userName="${OPENSHIFT_LOG_LOGIN}" 
 			password="${OPENSHIFT_LOG_PASSWORD}" 
@@ -154,12 +106,9 @@
 			privateKeyFile="${LOG_PRIVATE_KEY}"
 			path="${LOCAL_PATH_GIT_KIBANA}"
 		/>
+				
 		
-		<delete includeEmptyDirs="true" >
-		  <fileset defaultexcludes="no"  dir="${LOCAL_PATH_GIT_KIBANA}" includes="**/*"/>
-		</delete>		
-		
-	</target>	
+	</target>
 
 
 	<target name="create-server-produccion" depends="-configureAnt" >
@@ -324,15 +273,7 @@
 			domainName="${LOG_DOMAIN}" 
 			
 		/>
-		<createapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-			cartridgeName="diy-0.1"
-			gearProfileName="small"
-			scalable="false"
-		/>
+
 		<createapplication     
 			userName="${OPENSHIFT_LOG_LOGIN}" 
 			password="${OPENSHIFT_LOG_PASSWORD}" 
@@ -407,20 +348,19 @@
 		<property name="PRODUCCION_PUBLIC_KEY" value="${PRODUCCION_PRIVATE_KEY}.pub" />
 		<property name="PRODUCCION_DOMAIN" value="pro${APP_NAME}" />
 		<property name="PRODUCCION_APPLICATION" value="app" />
-
-		
+		<property name="PRODUCCION_LOGSTASH_APPLICATION" value="logstash" />
 		
 		<property name="PREPRODUCCION_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pre_rsa" />
 		<property name="PREPRODUCCION_PUBLIC_KEY" value="${PREPRODUCCION_PRIVATE_KEY}.pub" />
 		<property name="PREPRODUCCION_DOMAIN" value="pre${APP_NAME}" />
 		<property name="PREPRODUCCION_APPLICATION" value="app" />
-		
+		<property name="PREPRODUCCION_LOGSTASH_APPLICATION" value="logstash" />
 		
 		<property name="PRUEBAS_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pru_rsa" />
 		<property name="PRUEBAS_PUBLIC_KEY" value="${PRUEBAS_PRIVATE_KEY}.pub" />
 		<property name="PRUEBAS_DOMAIN" value="pru${APP_NAME}" />
 		<property name="PRUEBAS_APPLICATION" value="app" />
-		
+		<property name="PRUEBAS_LOGSTASH_APPLICATION" value="logstash" />
 		
 		
 		<property name="DESARROLLO_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/dev_rsa" />
@@ -431,23 +371,11 @@
 		
 		<property name="LOG_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/log_rsa" />
 		<property name="LOG_PUBLIC_KEY" value="${LOG_PRIVATE_KEY}.pub" />
-		<property name="LOG_DOMAIN" value="log${APP_NAME}" />
-		<property name="LOGSTASH_APPLICATION" value="logstash" />	
+		<property name="LOG_DOMAIN" value="log${APP_NAME}" />	
 		<property name="ELASTICSEARCH_APPLICATION" value="elasticsearch" />			
 		<property name="KIBANA_APPLICATION" value="kibana" />	
 		
-
-		
-
-		
-
-	   
-		
-		
-		
-  
-		
-	   
     </target> 	
+		
 	
 </project>
