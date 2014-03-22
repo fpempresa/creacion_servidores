@@ -188,14 +188,6 @@
 			privateKeyFile="${PRUEBAS_PRIVATE_KEY}"   
 		/>
 	</target>
-	<target name="restart-jenkins" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
-			password="${OPENSHIFT_DESARROLLO_PASSWORD}" 
-			domainName="${DESARROLLO_DOMAIN}" 
-			applicationName="${JENKINS_APPLICATION}" 
-		/>
-	</target>
 	<target name="create-server-desarrollo" depends="-configureAnt" >
 	
 		<removeallpublickeys 
@@ -356,6 +348,18 @@
 	<target name="restore-database-pruebas" depends="-configureAnt" >
 	</target>
  
+ 
+	<target name="restart-jenkins" depends="-configureAnt" >
+		<restartapplication 
+			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
+			password="${OPENSHIFT_DESARROLLO_PASSWORD}" 
+			domainName="${DESARROLLO_DOMAIN}" 
+			applicationName="${JENKINS_APPLICATION}" 
+		/>
+	</target>
+
+	
+ 
     <target name="-configureAnt">
         <echo>Configurando librerias de Ant</echo>
 
@@ -515,7 +519,7 @@
 			/>		
 			<git 
 				command="commit " 
-				options="*"
+				options=" -am actualizar_claves "
 				dir="${SSH_KEYS_FOLDER}"
 			/>
 			<git 
