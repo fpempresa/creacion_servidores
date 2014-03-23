@@ -511,16 +511,31 @@
     <macrodef name="updatekeysrepository">
 		<sequential>
 			<git 
+				command="status " 
+				options=""
+				dir="${SSH_KEYS_FOLDER}"
+			/>	
+			<git 
 				command="add " 
 				options="*"
 				dir="${SSH_KEYS_FOLDER}"
 				failerror="false"
-			/>		
+			/>	
+			<git 
+				command="status " 
+				options=""
+				dir="${SSH_KEYS_FOLDER}"
+			/>				
 			<git 
 				command="commit " 
 				options=" -am actualizar_claves "
 				dir="${SSH_KEYS_FOLDER}"
 			/>
+			<git 
+				command="status " 
+				options=""
+				dir="${SSH_KEYS_FOLDER}"
+			/>				
 			<git 
 				command="push " 
 				options=""
