@@ -511,8 +511,8 @@
     <macrodef name="updatekeysrepository">
 		<sequential>
 			<git 
-				command="status " 
-				options=""
+				command="checkout " 
+				options=" master "
 				dir="${SSH_KEYS_FOLDER}"
 			/>	
 			<git 
@@ -520,36 +520,27 @@
 				options="*"
 				dir="${SSH_KEYS_FOLDER}"
 				failerror="false"
-			/>	
-			<git 
-				command="status " 
-				options=""
-				dir="${SSH_KEYS_FOLDER}"
-			/>				
+			/>					
 			<git 
 				command="commit " 
 				options=" -am actualizar_claves "
 				dir="${SSH_KEYS_FOLDER}"
 			/>
 			<git 
-				command="status " 
-				options=""
-				dir="${SSH_KEYS_FOLDER}"
-			/>	
-			<git 
 				command="remote " 
 				options=" show origin "
 				dir="${SSH_KEYS_FOLDER}"
 			/>	
-
+<!--
 			<git 
 				command="config " 
 				options=" push.default upstream "
 				dir="${SSH_KEYS_FOLDER}"
-			/>		
+			/>	
+			-->
 			<git 
 				command="push " 
-				options=" -u origin"
+				options=" -u origin "
 				dir="${SSH_KEYS_FOLDER}"
 			/>			
 		</sequential>
