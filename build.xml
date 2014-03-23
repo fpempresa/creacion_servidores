@@ -540,7 +540,13 @@
 				command="remote " 
 				options=" show origin "
 				dir="${SSH_KEYS_FOLDER}"
-			/>			
+			/>	
+
+			<git 
+				command="config " 
+				options=" push.default upstream "
+				dir="${SSH_KEYS_FOLDER}"
+			/>		
 			<git 
 				command="push " 
 				options=" -u origin"
