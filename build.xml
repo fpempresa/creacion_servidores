@@ -229,6 +229,17 @@
 		/>
 
 
+		
+			
+
+		<antcall target="show-jenkins-password">
+		</antcall>
+		
+	</target>
+	
+	<target name="show-jenkins-password" depends="-configureAnt">
+		<!-- Mostrar el usuario y la contraseña de Jenkins -->
+		
 		<applicationproperty     
 			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
 			password="${OPENSHIFT_DESARROLLO_PASSWORD}"  
@@ -253,8 +264,7 @@
 			name="SSH_PORT" 
 			applicationProperty="SSHPort"
 		/>		
-
-		<!-- Mostrar el usuario y la contraseña de Jenkins -->
+		
 		<sshexec 
 			host="${SSH_HOST}"
 			username="${SSH_USER}"
@@ -268,13 +278,8 @@
 			port="${SSH_PORT}"
 			keyfile="${DESARROLLO_PRIVATE_KEY}"
 			command="env | grep JENKINS_PASSWORD" trust="true"
-		/>			
-
-		
-		
+		/>		
 	</target>
-	
-	
 	
 	<target name="create-server-log" depends="-configureAnt" >
 		<removeallpublickeys 
@@ -362,26 +367,20 @@
  
     <target name="-configureAnt">
         <echo>Configurando librerias de Ant</echo>
-
-        <property name="libAnt.path" value="libant" />
-
-        <path id="libAnt.classpath">
-            <fileset dir="${libAnt.path}">
-                <include name="**/*.jar" />
-            </fileset>
-        </path>
 	
 		
 		<!-- OpenShift -->
-		<taskdef classpathref="libAnt.classpath" resource="es/logongas/openshift/ant/antlib.xml" />
+		<taskdef  resource="es/logongas/openshift/ant/antlib.xml" />
+		
         <!-- El try-cath -->
-        <taskdef classpathref="libAnt.classpath" resource="net/sf/antcontrib/antcontrib.properties"/>
+        <taskdef  resource="net/sf/antcontrib/antcontrib.properties"/>
+		
         <!-- Manejo de ficheros XML -->
-        <taskdef classpathref="libAnt.classpath" name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
-		<!-- Flyway -->
-		<taskdef classpathref="libAnt.classpath" resource="com/googlecode/flyway/ant/antlib.xml" />
+        <taskdef  name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+
 		<!-- Cargar todas las variables de entorno -->
 		<property environment="env"/>
+		
 		<!-- Cargar el fichero de propiedades -->
 		<property name="PROJECT_FILE" value="../private/proyecto.properties"  />
 		<property file="${PROJECT_FILE}" />
