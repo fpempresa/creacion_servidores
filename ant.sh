@@ -1,4 +1,3 @@
 #!/bin/sh
-
-export ANT_HOME=.
-./bin/ant $*
+export ANT_HOME=./ant
+$ANT_HOME/bin/ant $*
