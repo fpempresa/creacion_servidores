@@ -538,7 +538,7 @@
 			/>				
 			<git 
 				command="push " 
-				options=""
+				options=" origin master "
 				dir="${SSH_KEYS_FOLDER}"
 			/>			
 		</sequential>
