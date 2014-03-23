@@ -200,10 +200,9 @@
 			force="true" 
 		/>
 	
-		<createkeypair     
+		<createkeysrepository     
 			privateKeyFile="${DESARROLLO_PRIVATE_KEY}"
 		/>
-		<updatekeysrepository />
 		
 		<addpublickey     
 			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
@@ -292,10 +291,9 @@
 			force="true" 
 		/>
 	
-		<createkeypair     
+		<createkeysrepository     
 			privateKeyFile="${LOG_PRIVATE_KEY}"
 		/>
-		<updatekeysrepository />
 		
 		<addpublickey     
 			userName="${OPENSHIFT_LOG_LOGIN}" 
@@ -442,10 +440,9 @@
 			/>
 			
 			<echo>Creando en @{privateKeyFile} el par de calve publica/privada</echo>
-			<createkeypair     
+			<createkeysrepository     
 				privateKeyFile="@{privateKeyFile}"
 			/>
-			<updatekeysrepository />
 			
 			<echo>Anyadiendo las calve publicas a la cuenta de Openshift</echo>
 			<addpublickey     
@@ -508,39 +505,34 @@
         </sequential>
     </macrodef> 
 	
-    <macrodef name="updatekeysrepository">
+    <macrodef name="createkeysrepository">
+        <attribute name="privateKeyFile" />
 		<sequential>
 			<git 
 				command="checkout " 
 				options=" master "
 				dir="${SSH_KEYS_FOLDER}"
 			/>	
+			
+			<createkeypair     
+				privateKeyFile="@{privateKeyFile}"
+			/>			
+			
 			<git 
 				command="add " 
 				options="*"
 				dir="${SSH_KEYS_FOLDER}"
 				failerror="false"
-			/>					
+			/>	
+			
 			<git 
 				command="commit " 
-				options=" -am actualizar_claves "
+				options=" -am actualizar_clave_publica_privada "
 				dir="${SSH_KEYS_FOLDER}"
 			/>
 			<git 
-				command="remote " 
-				options=" show origin "
-				dir="${SSH_KEYS_FOLDER}"
-			/>	
-<!--
-			<git 
-				command="config " 
-				options=" push.default upstream "
-				dir="${SSH_KEYS_FOLDER}"
-			/>	
-			-->
-			<git 
 				command="push " 
-				options=" -u origin "
+				options="  "
 				dir="${SSH_KEYS_FOLDER}"
 			/>			
 		</sequential>
