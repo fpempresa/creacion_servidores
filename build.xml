@@ -515,7 +515,7 @@
 			/>	
 			<git 
 				command="pull" 
-				options="-s recursive -X theirs upstream origin"
+				options="-s recursive -X theirs origin master"
 				dir="${SSH_KEYS_FOLDER}"
 			/>
 			<createkeypair     
