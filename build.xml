@@ -15,6 +15,8 @@
     </target>
 	
 	<target name="deploy-produccion" depends="-configureAnt" >
+	
+
 		<configureserver 
 			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
 			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
@@ -44,17 +46,9 @@
 			/>
 			
 		</configureserver>
+
 		
-<!--		
-		<configureserver 
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			domainName="${PRODUCCION_DOMAIN}" 
-			applicationName="${PRODUCCION_LOGSTASH_APPLICATION}" 
-			gitrepository="${GIT_REPOSITORY_LOGSTASH}" 
-			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"
-		/>			
--->		
+	
 	
 		
 	</target>
@@ -89,7 +83,7 @@
 			/>
 			
 		</configureserver>	
-	
+
 	</target>
 	
 	<target name="deploy-pruebas" depends="-configureAnt" >
@@ -122,7 +116,7 @@
 			/>
 			
 		</configureserver>		
-	
+
 	</target>
 	
 		
@@ -130,7 +124,7 @@
 	<target name="deploy-desarrollo" depends="-configureAnt" >
 	</target>	
 	
-	<target name="deploy-log" depends="-configureAnt,deploy-log-elasticsearch,deploy-log-kibana" >	
+	<target name="deploy-log" depends="-configureAnt,deploy-log-elasticsearch,deploy-log-logstash,deploy-log-kibana" >	
 	</target>	
 	
 	<target name="deploy-log-elasticsearch" depends="-configureAnt" >
@@ -154,6 +148,16 @@
 		/>
 	</target>
 
+	<target name="deploy-log-logstash" depends="-configureAnt" >
+		<configureserver 
+			userName="${OPENSHIFT_LOG_LOGIN}" 
+			password="${OPENSHIFT_LOG_PASSWORD}" 
+			domainName="${LOG_DOMAIN}" 
+			applicationName="${LOGSTASH_APPLICATION}" 
+			gitrepository="${GIT_REPOSITORY_LOGSTASH}" 
+			privateKeyFile="${LOG_PRIVATE_KEY}"
+		/>	
+	</target>	
 	
 	
 	<target name="create-server-produccion" depends="-configureAnt" >
@@ -161,8 +165,7 @@
 			userName="${OPENSHIFT_PRODUCCION_LOGIN}"  
 			password="${OPENSHIFT_PRODUCCION_PASSWORD}"  
 			domainName="${PRODUCCION_DOMAIN}"  
-			applicationName="${PRODUCCION_APPLICATION}"  
-			logapplicationName="${PRODUCCION_LOGSTASH_APPLICATION}"  
+			applicationName="${PRODUCCION_APPLICATION}"    
 			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"   
 		/>	
 	</target>
@@ -173,7 +176,6 @@
 			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}"  
 			domainName="${PREPRODUCCION_DOMAIN}"  
 			applicationName="${PREPRODUCCION_APPLICATION}"  
-			logapplicationName="${PREPRODUCCION_LOGSTASH_APPLICATION}"  
 			privateKeyFile="${PREPRODUCCION_PRIVATE_KEY}"   
 		/>			
 	</target>
@@ -183,8 +185,7 @@
 			userName="${OPENSHIFT_PRUEBAS_LOGIN}"  
 			password="${OPENSHIFT_PRUEBAS_PASSWORD}"  
 			domainName="${PRUEBAS_DOMAIN}"  
-			applicationName="${PRUEBAS_APPLICATION}"  
-			logapplicationName="${PRUEBAS_LOGSTASH_APPLICATION}"  
+			applicationName="${PRUEBAS_APPLICATION}"    
 			privateKeyFile="${PRUEBAS_PRIVATE_KEY}"   
 		/>
 	</target>
@@ -321,6 +322,15 @@
 			userName="${OPENSHIFT_LOG_LOGIN}" 
 			password="${OPENSHIFT_LOG_PASSWORD}" 
 			domainName="${LOG_DOMAIN}" 
+			applicationName="${LOGSTASH_APPLICATION}"  
+			cartridgeName="diy-0.1"
+			gearProfileName="small"
+			scalable="false"
+		/>		
+		<createapplication     
+			userName="${OPENSHIFT_LOG_LOGIN}" 
+			password="${OPENSHIFT_LOG_PASSWORD}" 
+			domainName="${LOG_DOMAIN}" 
 			applicationName="${KIBANA_APPLICATION}"  
 			cartridgeName="php-5.4"
 			gearProfileName="small"
@@ -389,17 +399,14 @@
 		<property name="PRODUCCION_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pro_rsa" />
 		<property name="PRODUCCION_DOMAIN" value="pro${APP_NAME}" />
 		<property name="PRODUCCION_APPLICATION" value="app" />
-		<property name="PRODUCCION_LOGSTASH_APPLICATION" value="logstash" />
 		
 		<property name="PREPRODUCCION_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pre_rsa" />
 		<property name="PREPRODUCCION_DOMAIN" value="pre${APP_NAME}" />
 		<property name="PREPRODUCCION_APPLICATION" value="app" />
-		<property name="PREPRODUCCION_LOGSTASH_APPLICATION" value="logstash" />
 		
 		<property name="PRUEBAS_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pru_rsa" />
 		<property name="PRUEBAS_DOMAIN" value="pru${APP_NAME}" />
 		<property name="PRUEBAS_APPLICATION" value="app" />
-		<property name="PRUEBAS_LOGSTASH_APPLICATION" value="logstash" />
 		
 		
 		<property name="DESARROLLO_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/dev_rsa" />
@@ -413,6 +420,7 @@
 		<property name="LOG_DOMAIN" value="log${APP_NAME}" />	
 		<property name="ELASTICSEARCH_APPLICATION" value="elasticsearch" />			
 		<property name="KIBANA_APPLICATION" value="kibana" />	
+		<property name="LOGSTASH_APPLICATION" value="logstash" />
 		
     </target> 	
 		
@@ -421,7 +429,6 @@
         <attribute name="password"  />
         <attribute name="domainName"  />
         <attribute name="applicationName" />
-		<attribute name="logapplicationName" />
         <attribute name="privateKeyFile"  />
         <sequential>
 			<echo>Creando Servidor de Aplicaciones en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>
@@ -487,17 +494,6 @@
 				domainName="@{domainName}" 
 				applicationName="@{applicationName}"  
 				cartridgeName="mysql-5.5" 
-			/>
-
-			<echo>Creando servidor de log</echo>
-			<createapplication     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{logapplicationName}"  
-				cartridgeName="diy-0.1"
-				gearProfileName="small"
-				scalable="false"
 			/>
 
 			<echo>Finalizado la creacion del servidor de aplicaciones</echo>
