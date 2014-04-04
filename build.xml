@@ -15,7 +15,22 @@
     </target>
 	
 	<target name="deploy-produccion" depends="-configureAnt" >
-	
+		<applicationproperty     
+			userName="${OPENSHIFT_LOG_LOGIN}" 
+			password="${OPENSHIFT_LOG_PASSWORD}"  
+			domainName="${LOG_DOMAIN}" 
+			applicationName="${LOGSTASH_APPLICATION}"  
+			name="SSH_HOST" 
+			applicationProperty="SSHHost"
+		/>
+		<applicationproperty     
+			userName="${OPENSHIFT_LOG_LOGIN}" 
+			password="${OPENSHIFT_LOG_PASSWORD}"  
+			domainName="${LOG_DOMAIN}" 
+			applicationName="${LOGSTASH_APPLICATION}"
+			name="SSH_USER" 
+			applicationProperty="SSHUser"
+		/>
 
 		<configureserver 
 			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
@@ -38,8 +53,8 @@
 				failerror="false"
 			/>	
 			<copy file="../${APP_NAME}/dist/${APP_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />
-			<copy file="LOG_PRIVATE_KEY" tofile="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
-			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">$SSHUser@$SSH_HOST:$SSH_PORT</echo>			
+			<copy file="${LOG_PRIVATE_KEY}" todir="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
+			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">${SSH_USER}@${SSH_HOST}</echo>			
 			<git 
 				command="add " 
 				options="*"
@@ -56,6 +71,23 @@
 	</target>
 	
 	<target name="deploy-preproduccion" depends="-configureAnt" >
+		<applicationproperty     
+			userName="${OPENSHIFT_LOG_LOGIN}" 
+			password="${OPENSHIFT_LOG_PASSWORD}"  
+			domainName="${LOG_DOMAIN}" 
+			applicationName="${LOGSTASH_APPLICATION}"  
+			name="SSH_HOST" 
+			applicationProperty="SSHHost"
+		/>
+		<applicationproperty     
+			userName="${OPENSHIFT_LOG_LOGIN}" 
+			password="${OPENSHIFT_LOG_PASSWORD}"  
+			domainName="${LOG_DOMAIN}" 
+			applicationName="${LOGSTASH_APPLICATION}"
+			name="SSH_USER" 
+			applicationProperty="SSHUser"
+		/>
+	
 		<configureserver 
 			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
 			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
@@ -77,8 +109,8 @@
 				failerror="false"
 			/>	
 			<copy file="../${APP_NAME}/dist/${APP_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />
-			<copy file="LOG_PRIVATE_KEY" tofile="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
-			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">$SSHUser@$SSH_HOST:$SSH_PORT</echo>			
+			<copy file="${LOG_PRIVATE_KEY}" todir="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
+			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">${SSH_USER}@${SSH_HOST}</echo>			
 			<git 
 				command="add " 
 				options="*"
@@ -107,14 +139,6 @@
 			name="SSH_USER" 
 			applicationProperty="SSHUser"
 		/>
-		<applicationproperty     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}" 
-			name="SSH_PORT" 
-			applicationProperty="SSHPort"
-		/>
 	
 		
 	
@@ -139,8 +163,8 @@
 				failerror="false"
 			/>	
 			<copy file="../${APP_NAME}/dist/${APP_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />
-			<copy file="LOG_PRIVATE_KEY" tofile="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
-			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">$SSHUser@$SSH_HOST:$SSH_PORT</echo>
+			<copy file="${LOG_PRIVATE_KEY}" todir="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
+			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">${SSH_USER}@${SSH_HOST}</echo>
 			<git 
 				command="add " 
 				options="*"
