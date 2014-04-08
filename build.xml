@@ -468,66 +468,7 @@
 	<target name="restore-database-pruebas" depends="-configureAnt" >
 	</target>
  
-	<target name="restart-produccion" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			domainName="${PRODUCCION_DOMAIN}" 
-			applicationName="${PRODUCCION_APPLICATION}" 
-		/>
-	</target> 
-	<target name="restart-preproduccion" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
-			domainName="${PREPRODUCCION_DOMAIN}" 
-			applicationName="${PREPRODUCCION_APPLICATION}" 
-		/>
-	</target> 	
-	
-	
-	<target name="restart-pruebas" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}" 
-			domainName="${PRUEBAS_DOMAIN}" 
-			applicationName="${PRUEBAS_APPLICATION}" 
-		/>
-	</target> 	 
- 
-	<target name="restart-jenkins" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
-			password="${OPENSHIFT_DESARROLLO_PASSWORD}" 
-			domainName="${DESARROLLO_DOMAIN}" 
-			applicationName="${JENKINS_APPLICATION}" 
-		/>
-	</target>
-	<target name="restart-logstash" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}" 
-		/>
-	</target>
-	<target name="restart-elasticsearch" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${ELASTICSEARCH_APPLICATION}" 
-		/>
-	</target>
-	<target name="restart-kibana" depends="-configureAnt" >
-		<restartapplication 
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${KIBANA_APPLICATION}" 
-		/>
-	</target>	
- 
+
     <target name="-configureAnt">
         <echo>Configurando librerias de Ant</echo>
 	
