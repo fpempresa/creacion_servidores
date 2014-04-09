@@ -1,711 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="fpempresa" default="default" basedir=".">
-    <description>Crea y configura todos los servidores de fpempresa</description>
-    <import file="utils.xml"/>
-  
+<project name="proyecto_software" default="default" basedir=".">
+    <description>Crea y configura todos los servidores de un proyecto de software en OpenShift</description>
+    <import file="base.xml"/>
 
+	<target name="default" depends="create-domain,create-app-jenkins,create-app-project,deploy-project" />
 	
-	
-	<target name="deploy-produccion" depends="-configureAnt" >
-		<applicationproperty     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-			name="SSH_HOST" 
-			applicationProperty="SSHHost"
-		/>
-		<applicationproperty     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"
-			name="SSH_USER" 
-			applicationProperty="SSHUser"
-		/>
 
-		<configureserver 
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}" 
-			domainName="${PRODUCCION_DOMAIN}" 
-			applicationName="${PRODUCCION_APPLICATION}" 
-			gitrepository="${GIT_REPOSITORY_APP}" 
-			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"
-		>	
-			<trycatch property="exception" >
-				<try>
-					<removeenvironmentvariable 
-						userName="@{userName}" 
-						password="@{password}" 
-						domainName="@{domainName}" 
-						applicationName="@{applicationName}"  
-						environmentVariableName="NEW_RELIC_LICENSE_KEY" 
-					/>
-				</try>
-				<catch>
-					<echo>No se pudo borrar la variable de entorno NEW_RELIC_LICENSE_KEY</echo>
-				</catch>
-			</trycatch>
-		
-			<addenvironmentvariable     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				environmentVariableName="NEW_RELIC_LICENSE_KEY" 
-				environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
-			/>		
-		
-			<git 
-				command="rm" 
-				options="pom.xml"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>
-			<git 
-				command="rm" 
-				options="-r src"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>	
-			<copy file="../${APP_NAME}/dist/${APP_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />
-			<copy file="${LOG_PRIVATE_KEY}" todir="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
-			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">${SSH_USER}@${SSH_HOST}</echo>			
-			<git 
-				command="add " 
-				options="*"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>
-			
-		</configureserver>
-
-		
-	
-	
-		
-	</target>
-	
-	<target name="deploy-preproduccion" depends="-configureAnt" >
-		<applicationproperty     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-			name="SSH_HOST" 
-			applicationProperty="SSHHost"
-		/>
-		<applicationproperty     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"
-			name="SSH_USER" 
-			applicationProperty="SSHUser"
-		/>
-	
-		<configureserver 
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}" 
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}" 
-			domainName="${PREPRODUCCION_DOMAIN}" 
-			applicationName="${PREPRODUCCION_APPLICATION}" 
-			gitrepository="${GIT_REPOSITORY_APP}" 
-			privateKeyFile="${PREPRODUCCION_PRIVATE_KEY}"
-		>	
-			<trycatch property="exception" >
-				<try>
-					<removeenvironmentvariable 
-						userName="@{userName}" 
-						password="@{password}" 
-						domainName="@{domainName}" 
-						applicationName="@{applicationName}"  
-						environmentVariableName="NEW_RELIC_LICENSE_KEY" 
-					/>
-				</try>
-				<catch>
-					<echo>No se pudo borrar la variable de entorno NEW_RELIC_LICENSE_KEY</echo>
-				</catch>
-			</trycatch>
-		
-			<addenvironmentvariable     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				environmentVariableName="NEW_RELIC_LICENSE_KEY" 
-				environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
-			/>			
-		
-			<git 
-				command="rm" 
-				options="pom.xml"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>
-			<git 
-				command="rm" 
-				options="-r src"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>	
-			<copy file="../${APP_NAME}/dist/${APP_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />
-			<copy file="${LOG_PRIVATE_KEY}" todir="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
-			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">${SSH_USER}@${SSH_HOST}</echo>			
-			<git 
-				command="add " 
-				options="*"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>
-			
-		</configureserver>	
-
-	</target>
-	
-	<target name="deploy-pruebas" depends="-configureAnt" >
-		<applicationproperty     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-			name="SSH_HOST" 
-			applicationProperty="SSHHost"
-		/>
-		<applicationproperty     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"
-			name="SSH_USER" 
-			applicationProperty="SSHUser"
-		/>
-	
-		
-	
-		<configureserver 
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}" 
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}" 
-			domainName="${PRUEBAS_DOMAIN}" 
-			applicationName="${PRUEBAS_APPLICATION}" 
-			gitrepository="${GIT_REPOSITORY_APP}" 
-			privateKeyFile="${PRUEBAS_PRIVATE_KEY}"
-		>	
-			<trycatch property="exception" >
-				<try>
-					<removeenvironmentvariable 
-						userName="@{userName}" 
-						password="@{password}" 
-						domainName="@{domainName}" 
-						applicationName="@{applicationName}"  
-						environmentVariableName="NEW_RELIC_LICENSE_KEY" 
-					/>
-				</try>
-				<catch>
-					<echo>No se pudo borrar la variable de entorno NEW_RELIC_LICENSE_KEY</echo>
-				</catch>
-			</trycatch>
-		
-		
-		
-			<addenvironmentvariable     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				environmentVariableName="NEW_RELIC_LICENSE_KEY" 
-				environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
-			/>			
-		
-			<git 
-				command="rm" 
-				options="pom.xml"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>
-			<git 
-				command="rm" 
-				options="-r src"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>	
-			<copy file="../${APP_NAME}/dist/${APP_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />
-			<copy file="${LOG_PRIVATE_KEY}" todir="@{gitlocalpath}/.openshift/action_hooks/logstash" overwrite="true" />
-			<echo file="@{gitlocalpath}/.openshift/action_hooks/logstash/ssh-redis.txt" force="true">${SSH_USER}@${SSH_HOST}</echo>
-			<git 
-				command="add " 
-				options="*"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>
-			
-		</configureserver>		
-
-	</target>
-	
-		
-	
-	<target name="deploy-desarrollo" depends="-configureAnt" >
-	</target>	
-	
-	<target name="deploy-log" depends="-configureAnt,deploy-log-elasticsearch,deploy-log-logstash,deploy-log-kibana" >	
-	</target>	
-	
-	<target name="deploy-log-elasticsearch" depends="-configureAnt" >
-		<configureserver 
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${ELASTICSEARCH_APPLICATION}" 
-			gitrepository="${GIT_REPOSITORY_ELASTICSEARCH}" 
-			privateKeyFile="${LOG_PRIVATE_KEY}"
-		/>
-	</target>	
-	<target name="deploy-log-kibana" depends="-configureAnt" >
-		<configureserver 
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${KIBANA_APPLICATION}" 
-			gitrepository="${GIT_REPOSITORY_KIBANA}" 
-			privateKeyFile="${LOG_PRIVATE_KEY}"
-		/>
-	</target>
-
-	<target name="deploy-log-logstash" depends="-configureAnt" >
-		<configureserver 
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}" 
-			gitrepository="${GIT_REPOSITORY_LOGSTASH}" 
-			privateKeyFile="${LOG_PRIVATE_KEY}"
+	<target name="create-domain" depends="-configureAnt">
+		<echo>Vas a destruir toda la informacion de una cuenta de OpenShift</echo>
+		<input
+			message="Escribe el nombre del entorno en el que crees que estas:"
+			validargs="PRODUCCION,PREPRODUCCION,PRUEBAS"
+			addproperty="ENVIRONMENT_RESPONSE"
 		/>	
-	</target>	
-	
-	
-	<target name="create-server-produccion" depends="-configureAnt" >
-		<createserverapp 
-			userName="${OPENSHIFT_PRODUCCION_LOGIN}"  
-			password="${OPENSHIFT_PRODUCCION_PASSWORD}"  
-			domainName="${PRODUCCION_DOMAIN}"  
-			applicationName="${PRODUCCION_APPLICATION}"    
-			privateKeyFile="${PRODUCCION_PRIVATE_KEY}"   
-		/>	
+		<if>
+			<equals arg1="${ENVIRONMENT_RESPONSE}" arg2="${APP_ENVIRONMENT}" />
+			<then>
+				<createdomainandkeys 
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+					domainName="${DOMAIN}" 
+					privateKeyFile="${PRIVATE_KEY}"
+				/>
+			</then>
+			<else>
+				<fail message="no estamos en ese entorno. Estamos en ${APP_ENVIRONMENT}"/>
+			</else>
+		</if>
 	</target>
-	
-	<target name="create-server-preproduccion" depends="-configureAnt" >
-		<createserverapp 
-			userName="${OPENSHIFT_PREPRODUCCION_LOGIN}"  
-			password="${OPENSHIFT_PREPRODUCCION_PASSWORD}"  
-			domainName="${PREPRODUCCION_DOMAIN}"  
-			applicationName="${PREPRODUCCION_APPLICATION}"  
-			privateKeyFile="${PREPRODUCCION_PRIVATE_KEY}"   
-		/>			
-	</target>
-	
-	<target name="create-server-pruebas" depends="-configureAnt" >
-		<createserverapp 
-			userName="${OPENSHIFT_PRUEBAS_LOGIN}"  
-			password="${OPENSHIFT_PRUEBAS_PASSWORD}"  
-			domainName="${PRUEBAS_DOMAIN}"  
-			applicationName="${PRUEBAS_APPLICATION}"    
-			privateKeyFile="${PRUEBAS_PRIVATE_KEY}"   
-		/>
-	</target>
-	<target name="create-server-desarrollo" depends="-configureAnt" >
-	
-		<removeallpublickeys 
-			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
-			password="${OPENSHIFT_DESARROLLO_PASSWORD}"  
-		/>
-		<destroyalldomains     
-			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
-			password="${OPENSHIFT_DESARROLLO_PASSWORD}" 
-			force="true" 
-		/>
-	
-		<createkeysrepository     
-			privateKeyFile="${DESARROLLO_PRIVATE_KEY}"
-		/>
-		
-		<addpublickey     
-			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
-			password="${OPENSHIFT_DESARROLLO_PASSWORD}" 
-			publicKeyName="ant" 
-			publicKeyFile="${DESARROLLO_PUBLIC_KEY}"
-		/>
-		<createdomain     
-			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
-			password="${OPENSHIFT_DESARROLLO_PASSWORD}" 
-			domainName="${DESARROLLO_DOMAIN}" 
-			
-		/>
 
+	<target name="create-app-jenkins" depends="-configureAnt">
 		<createapplication     
-			userName="${OPENSHIFT_DESARROLLO_LOGIN}" 
-			password="${OPENSHIFT_DESARROLLO_PASSWORD}" 
-			domainName="${DESARROLLO_DOMAIN}" 
-			applicationName="${JENKINS_APPLICATION}"  
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"  
 			cartridgeName="jenkins"
 			gearProfileName="small"
 			scalable="false"
 		/>
-
-
+		
+		<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
+		<addenvironmentvariable     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"
+			environmentVariableName="APP_ENVIRONMENT" 
+			environmentVariableValue="${APP_ENVIRONMENT}"
+		/>
+			
 		<antcall target="show-jenkins-password">
 		</antcall>
-		
+	
 	</target>
-	
 
+	<target name="create-app-project" depends="-configureAnt">
+		<antcall target="backup">
+		</antcall>
 	
-	<target name="create-server-log" depends="-configureAnt,create-log-application-elasticsearch,create-log-application-logstash,create-log-application-kibana" >
-		<removeallpublickeys 
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}"  
-		/>
-		<destroyalldomains     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			force="true" 
-		/>
-	
-		<createkeysrepository     
-			privateKeyFile="${LOG_PRIVATE_KEY}"
+		<createprojectapplication	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
 		/>
 		
-		<addpublickey     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			publicKeyName="ant" 
-			publicKeyFile="${LOG_PUBLIC_KEY}"
+		<antcall target="restore">
+		</antcall>
+	</target>
+
+	<target name="deploy-project" depends="-configureAnt">
+		<configureserver
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			gitRepository="${GIT_REPOSITORY_APP}"
+		>
+			<copy file="../${PROJECT_NAME}/dist/${PROJECT_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />	
+		</configureserver>
+	</target>
+
+	<target name="show-log-catalina" depends="-configureAnt">
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="cat $OPENSHIFT_JBOSSEWS_DIR/logs/catalina.out"
+		/>	
+	</target>
+	<target name="show-log-files" depends="-configureAnt">
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="ls -l $OPENSHIFT_JBOSSEWS_DIR/logs"
+		/>	
+	</target>
+	<target name="show-env" depends="-configureAnt">
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="env"
+		/>	
+	</target>	
+	<target name="backup" depends="-configureAnt">
+		
+	</target>
+
+	<target name="restore" depends="-configureAnt">
+	</target>
+
+	<target name="restart" depends="-configureAnt">
+		<restartapplication 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>	
+	</target>
+	<target name="show-project-sshurl" depends="-configureAnt">
+		<!-- Mostrar la url de conexion de ssh de jenkins -->
+		
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"  
+			name="SSH_URL" 
+			applicationProperty="SshUrl"
 		/>
-		<createdomain     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			
+		
+		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${APPLICATION}</echo>
+		<echo>${SSH_URL}</echo>
+		
+	</target>
+	
+	<target name="show-jenkins-sshurl" depends="-configureAnt">
+		<!-- Mostrar la url de conexion de ssh de jenkins -->
+		
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"  
+			name="SSH_URL" 
+			applicationProperty="SshUrl"
 		/>
-	</target>
-	
-	<target name="create-log-application-elasticsearch" depends="-configureAnt" >
-		<destroyapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${ELASTICSEARCH_APPLICATION}"   
+		
+		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
+		<echo>${SSH_URL}</echo>
+		
+	</target>	
+
+	<target name="show-jenkins-password" depends="-configureAnt">
+		<!-- Mostrar el usuario y la contraseña de Jenkins -->
+
+		
+		<remote-exec   
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}" 
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="echo usuario:$JENKINS_USERNAME contraenya:$JENKINS_PASSWORD"
 		/>
-
-		<createapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${ELASTICSEARCH_APPLICATION}"  
-			cartridgeName="diy-0.1"
-			gearProfileName="small"
-			scalable="false"
-		/>
-	</target>
-		
-		
-	<target name="create-log-application-logstash" depends="-configureAnt" >
-		<destroyapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-		/>
-		<createapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${LOGSTASH_APPLICATION}"  
-			cartridgeName="diy-0.1"
-			gearProfileName="small"
-			scalable="false"
-		/>		
+	
 	</target>
 	
-	<target name="create-log-application-kibana" depends="-configureAnt" >
-		<destroyapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${KIBANA_APPLICATION}"  
-		/>
-
-		<createapplication     
-			userName="${OPENSHIFT_LOG_LOGIN}" 
-			password="${OPENSHIFT_LOG_PASSWORD}" 
-			domainName="${LOG_DOMAIN}" 
-			applicationName="${KIBANA_APPLICATION}"  
-			cartridgeName="php-5.4"
-			gearProfileName="small"
-			scalable="false"
-		/>		
-		
-	</target>
-	
-	
-
-	<target name="backup-database-produccion" depends="-configureAnt" >
-	</target>
-	
-	<target name="backup-database-preproduccion" depends="-configureAnt" >
-	</target>
-	
-	<target name="backup-database-pruebas" depends="-configureAnt" >
-	</target>
-
-	
-	
-	<target name="restore-database-produccion" depends="-configureAnt" >
-	</target>
-	
-	<target name="restore-database-preproduccion" depends="-configureAnt" >
-	</target>
-	
-	<target name="restore-database-pruebas" depends="-configureAnt" >
-	</target>
- 
-
-    <target name="-configureAnt">
-        <echo>Configurando librerias de Ant</echo>
-	
-		
-		<!-- OpenShift -->
-		<taskdef  resource="es/logongas/openshift/ant/antlib.xml" />
-		
-        <!-- El try-cath -->
-        <taskdef  resource="net/sf/antcontrib/antcontrib.properties"/>
-		
-        <!-- Manejo de ficheros XML -->
-        <taskdef  name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
-
-		<!-- Cargar todas las variables de entorno -->
-		<property environment="env"/>
-		
-		<!-- Cargar el fichero de propiedades -->
-		<property name="PROJECT_FILE" value="../private/proyecto.properties"  />
-		<property file="${PROJECT_FILE}" />
-	   
-		<property name="SSH_KEYS_FOLDER" value="../private" />
-
-		
-		<property name="PRODUCCION_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pro_rsa" />
-		<property name="PRODUCCION_DOMAIN" value="pro${APP_NAME}" />
-		<property name="PRODUCCION_APPLICATION" value="app" />
-		
-		<property name="PREPRODUCCION_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pre_rsa" />
-		<property name="PREPRODUCCION_DOMAIN" value="pre${APP_NAME}" />
-		<property name="PREPRODUCCION_APPLICATION" value="app" />
-		
-		<property name="PRUEBAS_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/pru_rsa" />
-		<property name="PRUEBAS_DOMAIN" value="pru${APP_NAME}" />
-		<property name="PRUEBAS_APPLICATION" value="app" />
-		
-		
-		<property name="DESARROLLO_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/dev_rsa" />
-		<property name="DESARROLLO_PUBLIC_KEY" value="${DESARROLLO_PRIVATE_KEY}.pub" />
-		<property name="DESARROLLO_DOMAIN" value="dev${APP_NAME}" />
-		<property name="JENKINS_APPLICATION" value="jenkins" />
-		
-		
-		<property name="LOG_PRIVATE_KEY" value="${SSH_KEYS_FOLDER}/log_rsa" />
-		<property name="LOG_PUBLIC_KEY" value="${LOG_PRIVATE_KEY}.pub" />
-		<property name="LOG_DOMAIN" value="log${APP_NAME}" />	
-		<property name="ELASTICSEARCH_APPLICATION" value="elasticsearch" />			
-		<property name="KIBANA_APPLICATION" value="kibana" />	
-		<property name="LOGSTASH_APPLICATION" value="logstash" />
-		
-    </target> 	
-		
-    <macrodef name="createserverapp">
-        <attribute name="userName" />
-        <attribute name="password"  />
-        <attribute name="domainName"  />
-        <attribute name="applicationName" />
-        <attribute name="privateKeyFile"  />
-        <sequential>
-			<echo>Creando Servidor de Aplicaciones en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>
-			
-			<echo>Borrando claves existentes</echo>
-			<removeallpublickeys 
-				userName="@{userName}" 
-				password="@{password}"  
-			/>
-			
-			<echo>Borrando dominios</echo>
-			<destroyalldomains     
-				userName="@{userName}" 
-				password="@{password}" 
-				force="true" 
-			/>
-			
-			<echo>Creando en @{privateKeyFile} el par de calve publica/privada</echo>
-			<createkeysrepository     
-				privateKeyFile="@{privateKeyFile}"
-			/>
-			
-			<echo>Anyadiendo las calve publicas a la cuenta de Openshift</echo>
-			<addpublickey     
-				userName="@{userName}" 
-				password="@{password}" 
-				publicKeyName="ant" 
-				publicKeyFile="@{privateKeyFile}.pub"
-			/>
-			
-			<echo>Creando el dominio @{domainName}</echo>
-			<createdomain     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				
-			/>
-			
-			<echo>Creando la aplicacion @{applicationName}</echo>
-			<createapplication     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				cartridgeName="jbossews-2.0"
-				gearProfileName="small"
-				scalable="true"
-			/>
-			
-			<addenvironmentvariable     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				environmentVariableName="OPENSHIFT_MYSQL_LOWER_CASE_TABLE_NAMES" 
-				environmentVariableValue="1"
-			/>	
-
-			
-			
-			<echo>Anyadiendo Base de datos</echo>
-			<addcartridge     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				cartridgeName="mysql-5.5" 
-			/>
-
-			<echo>Finalizado la creacion del servidor de aplicaciones</echo>
-			
-        </sequential>
-    </macrodef> 
-	
-    <macrodef name="createkeysrepository">
-        <attribute name="privateKeyFile" />
-		<sequential>
-			<git 
-				command="checkout " 
-				options=" master "
-				dir="${SSH_KEYS_FOLDER}"
-			/>	
-			<git 
-				command="pull" 
-				options="-s recursive -X theirs origin master"
-				dir="${SSH_KEYS_FOLDER}"
-			/>
-			<createkeypair     
-				privateKeyFile="@{privateKeyFile}"
-			/>			
-			
-			<git 
-				command="add " 
-				options="*"
-				dir="${SSH_KEYS_FOLDER}"
-				failerror="false"
-			/>	
-			
-			<git 
-				command="commit " 
-				options=" -am actualizar_clave_publica_privada "
-				dir="${SSH_KEYS_FOLDER}"
-			/>
-			<git 
-				command="push " 
-				options="  "
-				dir="${SSH_KEYS_FOLDER}"
-			/>			
-		</sequential>
-	</macrodef>
-	
-	
-    <macrodef name="configureserver">
-        <attribute name="userName" />
-        <attribute name="password"  />
-        <attribute name="domainName"  />
-        <attribute name="applicationName" />
-		<attribute name="gitrepository" />
-        <attribute name="privateKeyFile"  />
-		<attribute name="gitlocalpath" default="${env.TMP}/${APP_NAME}/@{domainName}/@{applicationName}"  />
-		<element name="precommit" optional="yes" implicit="true"  />
-        <sequential>	
-			<echo>configurando servidor desde repositorio git en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>	
-			<echo>repositorio git:@{gitrepository}</echo>
-		
-			<property name="LOCAL_PATH_GIT" value="" />
-			<echo>Directorio local del repositorio:@{gitlocalpath}</echo>
-		
-			<echo>Borrando los ficheros que pudiera haber en el directorio local</echo>
-			<delete  includeEmptyDirs="true" failonerror="false" >
-			  <fileset defaultexcludes="no"  dir="@{gitlocalpath}" includes="**/*"/>
-			</delete>	
-			<mkdir dir="@{gitlocalpath}" />
-		
-			<echo>Clonando repositorio git del servidor en OpenShift</echo>
-			<gitcloneapplication     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				privateKeyFile="@{privateKeyFile}"
-				path="@{gitlocalpath}"
-			/>
-
-			
-			<git 
-				command="remote" 
-				options="add upstream -m master @{gitrepository}"
-				dir="@{gitlocalpath}"
-			/>
-		
-			<echo>Pull del repositorio remoto:@{gitrepository}</echo>
-			<git 
-				command="pull" 
-				options="-s recursive -X theirs upstream master"
-				dir="@{gitlocalpath}"
-			/>	
-			
-			<echo>Realizando tareas especificas de prepush</echo>
-			<precommit />
-			
-			<git 
-				command="commit" 
-				options="-am nueva_sersion_de_la_app_"
-				dir="@{gitlocalpath}"
-				failerror="false"
-			/>
-			
-			<echo>Iniciando push a OpenShift</echo>
-			<gitpushapplication     
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				privateKeyFile="@{privateKeyFile}"
-				path="@{gitlocalpath}"
-			/>
-
-		
-			<echo>Finalizado la configuracion del servidor</echo>
-			
-        </sequential>
-    </macrodef> 
 </project>
