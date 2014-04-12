@@ -82,37 +82,7 @@
 			<copy file="../${PROJECT_NAME}/dist/${PROJECT_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />	
 		</configureserver>
 	</target>
-
-	<target name="show-log-catalina" depends="-configureAnt">
-		<remote-exec 
-			userName="${OPENSHIFT_LOGIN}" 
-			password="${OPENSHIFT_PASSWORD}"  
-			domainName="${DOMAIN}" 
-			applicationName="${APPLICATION}"
-			privateKeyFile="${PRIVATE_KEY}"
-			cmd="cat $OPENSHIFT_JBOSSEWS_DIR/logs/catalina.out"
-		/>	
-	</target>
-	<target name="show-log-files" depends="-configureAnt">
-		<remote-exec 
-			userName="${OPENSHIFT_LOGIN}" 
-			password="${OPENSHIFT_PASSWORD}"  
-			domainName="${DOMAIN}" 
-			applicationName="${APPLICATION}"
-			privateKeyFile="${PRIVATE_KEY}"
-			cmd="ls -l $OPENSHIFT_JBOSSEWS_DIR/logs"
-		/>	
-	</target>
-	<target name="show-env-project" depends="-configureAnt">
-		<remote-exec 
-			userName="${OPENSHIFT_LOGIN}" 
-			password="${OPENSHIFT_PASSWORD}"  
-			domainName="${DOMAIN}" 
-			applicationName="${APPLICATION}"
-			privateKeyFile="${PRIVATE_KEY}"
-			cmd="env"
-		/>	
-	</target>	
+	
 	<target name="backup" depends="-configureAnt">
 		<property name="env.OPENSHIFT_DATA_DIR" value=".." />
 		<property name="LOCAL_DIR_BACKUP" value="${env.OPENSHIFT_DATA_DIR}" />
@@ -387,7 +357,7 @@
 		/>	
 	</target>	
 	
-	<target name="show-project-sshurl" depends="-configureAnt">
+	<target name="show-project-info" depends="-configureAnt">
 		<!-- Mostrar la url de conexion de ssh de jenkins -->
 		
 		<applicationproperty     
@@ -398,13 +368,25 @@
 			name="SSH_URL" 
 			applicationProperty="SshUrl"
 		/>
+
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"  
+			name="GIT_URL" 
+			applicationProperty="GitUrl"
+		/>
 		
 		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${APPLICATION}</echo>
-		<echo>${SSH_URL}</echo>
+		<echo>${SSH_URL}</echo>		
+		<echo>Git URL del domino ${DOMAIN} en aplicacion ${APPLICATION}</echo>
+		<echo>${GIT_URL}</echo>
+		
 		
 	</target>
 	
-	<target name="show-jenkins-sshurl" depends="-configureAnt">
+	<target name="show-jenkins-info" depends="-configureAnt">
 		<!-- Mostrar la url de conexion de ssh de jenkins -->
 		
 		<applicationproperty     
@@ -416,14 +398,14 @@
 			applicationProperty="SshUrl"
 		/>
 		
-		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
-		<echo>${SSH_URL}</echo>
-		
-	</target>	
-
-	<target name="show-jenkins-password" depends="-configureAnt">
-		<!-- Mostrar el usuario y la contraseña de Jenkins -->
-
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"  
+			name="GIT_URL" 
+			applicationProperty="GitUrl"
+		/>
 		
 		<remote-exec   
 			userName="${OPENSHIFT_LOGIN}" 
@@ -432,8 +414,46 @@
 			applicationName="${JENKINS}" 
 			privateKeyFile="${PRIVATE_KEY}"
 			cmd="echo usuario:$JENKINS_USERNAME contraenya:$JENKINS_PASSWORD"
-		/>
+		/>		
+		
+		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
+		<echo>${SSH_URL}</echo>		
+		<echo>Git URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
+		<echo>${GIT_URL}</echo>		
+		
+		
+	</target>	
+
 	
+	<target name="show-log-catalina" depends="-configureAnt">
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="cat $OPENSHIFT_JBOSSEWS_DIR/logs/catalina.out"
+		/>	
 	</target>
+	<target name="show-log-files" depends="-configureAnt">
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="ls -l $OPENSHIFT_JBOSSEWS_DIR/logs"
+		/>	
+	</target>
+	<target name="show-env-project" depends="-configureAnt">
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="env"
+		/>	
+	</target>	
 	
 </project>
