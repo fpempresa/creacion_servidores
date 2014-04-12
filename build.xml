@@ -103,7 +103,7 @@
 			cmd="ls -l $OPENSHIFT_JBOSSEWS_DIR/logs"
 		/>	
 	</target>
-	<target name="show-env" depends="-configureAnt">
+	<target name="show-env-project" depends="-configureAnt">
 		<remote-exec 
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
@@ -114,13 +114,263 @@
 		/>	
 	</target>	
 	<target name="backup" depends="-configureAnt">
+		<property name="env.OPENSHIFT_DATA_DIR" value=".." />
+		<property name="LOCAL_DIR_BACKUP" value="${env.OPENSHIFT_DATA_DIR}" />
+		<property name="FILE_BACKUP" value="backup" />
+		<tstamp>
+			<format property="MES" pattern="MM"/>
+			<format property="DIA_SEMANA" pattern="u"/>
+		</tstamp>
+
+		<property 
+			name="FILE_MENSUAL" 
+			value="${PROJECT_NAME}-${APP_ENVIRONMENT}-MES-${MES}-${FILE_BACKUP}.zip" 
+		/>
+
+		<property 
+			name="FILE_DIARIO" 
+			value="${PROJECT_NAME}-${APP_ENVIRONMENT}-DIA-${DIA_SEMANA}-${FILE_BACKUP}.zip" 
+		/>
+	
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+			name="SSH_HOST" 
+			applicationProperty="SSHHost"
+		/>
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"    
+			name="SSH_USER" 
+			applicationProperty="SSHUser"
+		/>
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+			name="SSH_PORT" 
+			applicationProperty="SSHPort"
+		/>
+
+
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="mysqldump -u $OPENSHIFT_MYSQL_DB_USERNAME -p$OPENSHIFT_MYSQL_DB_PASSWORD -h $OPENSHIFT_MYSQL_DB_HOST -P $OPENSHIFT_MYSQL_DB_PORT $OPENSHIFT_APP_NAME > /tmp/${FILE_BACKUP}.sql"
+		/>
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="zip -j /tmp/${FILE_BACKUP}.zip /tmp/${FILE_BACKUP}.sql"
+		/>
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="rm /tmp/${FILE_BACKUP}.sql"
+		/>		
+		
+		
+		<scp
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			file="${SSH_USER}@${SSH_HOST}:/tmp/${FILE_BACKUP}.zip"
+			todir="${LOCAL_DIR_BACKUP}"
+		/>
+		
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="rm /tmp/${FILE_BACKUP}.zip"
+		/>
+				
+		
+		<move 
+			file="${LOCAL_DIR_BACKUP}/${FILE_BACKUP}.zip" 
+			tofile="${LOCAL_DIR_BACKUP}/${FILE_MENSUAL}" 
+			overwrite="true"
+		/>
+		
+		<echo>-------- Backup a ${FTP_BACKUP_HOST} del fichero:${FILE_MENSUAL} en entorno ${APP_ENVIRONMENT}</echo>
+		<ftp 
+			server="${FTP_BACKUP_HOST}"
+			userid="${FTP_BACKUP_USER}"
+			password="${FTP_BACKUP_PASSWORD}"
+			remotedir="${FTP_BACKUP_ROOT_PATH}"
+		>
+			<fileset file="${LOCAL_DIR_BACKUP}/${FILE_MENSUAL}"/>
+		</ftp>
+		
+		
+		<move 
+			file="${LOCAL_DIR_BACKUP}/${FILE_MENSUAL}" 
+			tofile="${LOCAL_DIR_BACKUP}/${FILE_DIARIO}" 
+			overwrite="true"
+		/>
+		
+		<echo>-------- Backup a ${FTP_BACKUP_HOST} del fichero:${FILE_DIARIO} en entorno ${APP_ENVIRONMENT}</echo>
+		<ftp 
+			server="${FTP_BACKUP_HOST}"
+			userid="${FTP_BACKUP_USER}"
+			password="${FTP_BACKUP_PASSWORD}"
+			remotedir="${FTP_BACKUP_ROOT_PATH}"
+		>
+			<fileset file="${LOCAL_DIR_BACKUP}/${FILE_DIARIO}"/>
+		</ftp>
+		
+		<delete  
+			file="${LOCAL_DIR_BACKUP}/${FILE_DIARIO}"
+		/>
 		
 	</target>
 
 	<target name="restore" depends="-configureAnt">
+		<property name="env.OPENSHIFT_DATA_DIR" value=".." />
+		<property name="LOCAL_DIR_BACKUP" value="${env.OPENSHIFT_DATA_DIR}" />
+		<property name="FILE_BACKUP" value="backup" />
+		<tstamp>
+			<format property="MES" pattern="MM"/>
+			<format property="DIA_SEMANA" pattern="u"/>
+		</tstamp>
+
+		<property name="RESTORE" value="DIA-${DIA_SEMANA}" />
+		<property name="RESTORE_ENVIRONMENT" value="${APP_ENVIRONMENT}" />
+
+		<if>
+			<equals arg1="${APP_ENVIRONMENT}" arg2="PRODUCCION" />
+			<then>
+				<if>
+					<equals arg1="${RESTORE_ENVIRONMENT}" arg2="PRODUCCION" />
+					<then>
+					</then>
+					<else>
+						<fail message="En el entorno de produccion solo se puede restaurar el entorno de produccion pero se pensaba restaurar: ${RESTORE_ENVIRONMENT} de ${RESTORE}"/>
+					</else>
+				</if>
+			</then>
+		</if>		
+		
+		
+		
+		<property 
+			name="FILE_RESTORE" 
+			value="${PROJECT_NAME}-${RESTORE_ENVIRONMENT}-${RESTORE}-${FILE_BACKUP}.zip" 
+		/>
+	
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+			name="SSH_HOST" 
+			applicationProperty="SSHHost"
+		/>
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"    
+			name="SSH_USER" 
+			applicationProperty="SSHUser"
+		/>
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+			name="SSH_PORT" 
+			applicationProperty="SSHPort"
+		/>
+		
+		<echo>Descargando desde ${FTP_BACKUP_HOST} el fichero:${FILE_RESTORE}</echo>
+		<ftp 
+			action="get"
+			server="${FTP_BACKUP_HOST}"
+			userid="${FTP_BACKUP_USER}"
+			password="${FTP_BACKUP_PASSWORD}"
+			remotedir="${FTP_BACKUP_ROOT_PATH}"
+		>
+			<fileset dir="${LOCAL_DIR_BACKUP}">
+				<include name="${FILE_RESTORE}" />
+			</fileset>		
+		</ftp>		
+		
+		<scp
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			file="${LOCAL_DIR_BACKUP}/${FILE_RESTORE}"
+			todir="${SSH_USER}@${SSH_HOST}:/tmp"
+		/>
+	
+		<delete  
+			file="${LOCAL_DIR_BACKUP}/${FILE_RESTORE}"
+		/>	
+	
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="cd /tmp &amp;&amp; unzip -o /tmp/${FILE_RESTORE} "
+		/>
+	
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="rm /tmp/${FILE_RESTORE}"
+		/>
+	
+		<echo>-------- Restaurando fichero ${FILE_RESTORE} en el entorno de ${APP_ENVIRONMENT}</echo>
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="mysql -u $OPENSHIFT_MYSQL_DB_USERNAME -p$OPENSHIFT_MYSQL_DB_PASSWORD -h $OPENSHIFT_MYSQL_DB_HOST -P $OPENSHIFT_MYSQL_DB_PORT $OPENSHIFT_APP_NAME &lt; /tmp/${FILE_BACKUP}.sql"
+		/>
+	
+		<sshexec 
+			host="${SSH_HOST}"
+			username="${SSH_USER}"
+			port="${SSH_PORT}"
+			keyfile="${PRIVATE_KEY}"
+			trust="true"
+			command="rm /tmp/${FILE_BACKUP}.sql"
+		/>
+	
+		<restartapplication 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>
+	
 	</target>
 
-	<target name="restart" depends="-configureAnt">
+	<target name="restart-project" depends="-configureAnt">
 		<restartapplication 
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
@@ -128,6 +378,15 @@
 			applicationName="${APPLICATION}" 
 		/>	
 	</target>
+	<target name="restart-jenkins" depends="-configureAnt">
+		<restartapplication 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}" 
+		/>	
+	</target>	
+	
 	<target name="show-project-sshurl" depends="-configureAnt">
 		<!-- Mostrar la url de conexion de ssh de jenkins -->
 		

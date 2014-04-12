@@ -72,6 +72,9 @@
 			</else>
 		</if>
 		
+		<echo>${DOMAIN}</echo>
+		<echo>${OPENSHIFT_LOGIN}</echo>
+		
     </target> 
 	
     <macrodef name="createdomainandkeys">
@@ -192,7 +195,7 @@
 				password="@{password}" 
 				domainName="@{domainName}" 
 				applicationName="@{applicationName}"  
-				cartridgeName="mysql-5.5" 
+				cartridgeName="mysql" 
 			/>
 
 			<echo>Finalizado la creacion del servidor de aplicaciones</echo>
