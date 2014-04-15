@@ -381,8 +381,8 @@
 	
 	
 	<target name="show-info" depends="-configureAnt">
-		<!-- Mostrar la url de conexion de ssh de jenkins -->
-		
+		<!-- Información de OpenShift sobre las 2 aplicaciones -->
+
 		<applicationproperty     
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
@@ -441,6 +441,26 @@
 
 	
 	<target name="view-log" depends="-configureAnt">
+	
+	
+<!--	
+catalina
+host-manager
+localhost
+manager
+localhost_access_log
+
+
+
+
+
+
+haproxy
+haproxy_ctld
+jbossews
+newrelic
+	-->
+	
 		<remote-exec 
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
@@ -467,8 +487,26 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
-			cmd="env"
+			cmd="env | sort"
 		/>	
 	</target>	
+	<target name="show-env-jenkins" depends="-configureAnt">
+		<addenvironmentvariable     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"
+			environmentVariableName="APP_ENVIRONMENT" 
+			environmentVariableValue="${APP_ENVIRONMENT}"
+		/>	
 	
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="env | sort"
+		/>	
+	</target>
 </project>
