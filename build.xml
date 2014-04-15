@@ -75,12 +75,21 @@
 		>
 			<xmltask source="@{gitlocalpath}/.openshift/action_hooks/jenkins/system_builder/config.xml" dest="@{gitlocalpath}/.openshift/action_hooks/jenkins/system_builder/config.xml" failWithoutMatch="true">
 				<insert path="//passwordHash" xml="${JENKINS_PASSWORD_HASH}" />
-			</xmltask>		
+			</xmltask>	
+
+            <foreach  param="CONFIG_JOB_FILE" target="-changeUrlPrivateRepository">
+				<path>
+					<fileset dir="@{gitlocalpath}/.openshift/action_hooks/jenkins/jobs" > 
+						<include name="**/config.xml"/>
+					</fileset>
+				</path>			
+			</foreach>			
+			
+			
 		</configureserver>		
 	
 	</target>	
-	
-	
+		
 	<target name="create-app-project" depends="-configureAnt">
 		<antcall target="backup-project">
 		</antcall>
@@ -452,25 +461,79 @@
 
 	
 	<target name="view-log" depends="-configureAnt">
-	
-	
-<!--	
-catalina
-host-manager
-localhost
-manager
-localhost_access_log
-
-
-
-
-
-
-haproxy
-haproxy_ctld
-jbossews
-newrelic
-	-->
+		<!-- Depende de las propiedades:
+			LOG_TYPE: Por defecto catalina
+			LOG_DATE: Solo si el log tiene fecha. El formato es YYYY-MM-DD. Por defecto la de hoy
+			LINES: Nº de lineas a mostrar. Por defecto 100
+		-->
+		<property name="LOG_TYPE" value="catalina" />	
+		<tstamp>
+			<format property="LOG_DATE" pattern="YYYY-MM-dd"/>
+		</tstamp>
+		<property name="LINES" value="100" />	
+		
+		
+		
+		<if>
+			<equals arg1="${LOG_TYPE}" arg2="catalina" />
+			<then>	
+				<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.log" />	
+			</then>
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="host-manager" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.txt" />	
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="localhost" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.txt" />	
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="manager" />
+				<then>	
+					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.txt" />	
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="localhost_access_log" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.txt" />	
+				</then>
+			</elseif>
+			
+			
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="haproxy" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_LOG_DIR/${LOG_TYPE}.log" />	
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="haproxy_ctld" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_LOG_DIR/${LOG_TYPE}.log" />	
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="jbossews" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_LOG_DIR/${LOG_TYPE}.log" />	
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="newrelic" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_LOG_DIR/${LOG_TYPE}.log" />	
+				</then>
+			</elseif>
+			
+			<else>
+				 <fail message="El valor del tipo de log no es valido o no esta definido. ${LOG_TYPE}"/>
+			</else>
+		</if>
 	
 		<remote-exec 
 			userName="${OPENSHIFT_LOGIN}" 
@@ -478,7 +541,7 @@ newrelic
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
-			cmd="cat $OPENSHIFT_JBOSSEWS_DIR/logs/catalina.2014-04-12.log"
+			cmd="cat ${LOG_FILE} | tail -n ${LINES}"
 		/>	
 	</target>
 	<target name="show-log-files" depends="-configureAnt">

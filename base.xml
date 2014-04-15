@@ -10,7 +10,7 @@
 		
         <!-- El try-cath -->
         <taskdef  resource="net/sf/antcontrib/antcontrib.properties"/>
-		
+
         <!-- Manejo de ficheros XML -->
         <taskdef  name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
 
@@ -83,6 +83,13 @@
 		<echo>${OPENSHIFT_LOGIN}</echo>
 		
     </target> 
+	
+	<target name="-changeUrlPrivateRepository">
+		<echo>Cambiando URL de repositorio privado de ${CONFIG_JOB_FILE}</echo>
+		<xmltask source="${CONFIG_JOB_FILE}" dest="${CONFIG_JOB_FILE}" failWithoutMatch="true">
+			<insert path="/project/scm/scms/hudson.plugins.git.GitSCM[2]/userRemoteConfigs/hudson.plugins.git.UserRemoteConfig/url" xml="Pepe" />
+		</xmltask>
+	</target>
 	
     <macrodef name="createdomainandkeys">
         <attribute name="userName" />
