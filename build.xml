@@ -205,6 +205,7 @@
 			userid="${FTP_BACKUP_USER}"
 			password="${FTP_BACKUP_PASSWORD}"
 			remotedir="${FTP_BACKUP_ROOT_PATH}"
+			passive="yes"
 		>
 			<fileset file="${LOCAL_DIR_BACKUP}/${FILE_MENSUAL}"/>
 		</ftp>
@@ -222,6 +223,7 @@
 			userid="${FTP_BACKUP_USER}"
 			password="${FTP_BACKUP_PASSWORD}"
 			remotedir="${FTP_BACKUP_ROOT_PATH}"
+			passive="yes"
 		>
 			<fileset file="${LOCAL_DIR_BACKUP}/${FILE_DIARIO}"/>
 		</ftp>
@@ -297,6 +299,7 @@
 			userid="${FTP_BACKUP_USER}"
 			password="${FTP_BACKUP_PASSWORD}"
 			remotedir="${FTP_BACKUP_ROOT_PATH}"
+			passive="yes"
 		>
 			<fileset dir="${LOCAL_DIR_BACKUP}">
 				<include name="${FILE_RESTORE}" />
