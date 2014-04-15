@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="proyecto_software" default="create-domain" basedir=".">
+<project name="proyecto_software" default="default" basedir=".">
     <description>Crea y configura todos los servidores de un proyecto de software en OpenShift</description>
     <import file="base.xml"/>
 
-
+	<target name="default" depends="-configureAnt,create-domain,create-app-jenkins,deploy-jenkins,create-app-project">
+	</target>
+	
+	
 	<target name="create-domain" depends="-configureAnt">
 		<echo>Vas a destruir toda la informacion de una cuenta de OpenShift</echo>
 		<input
@@ -25,12 +28,7 @@
 				<fail message="no estamos en ese entorno. Estamos en ${APP_ENVIRONMENT}"/>
 			</else>
 		</if>
-		
-		<antcall target="create-app-jenkins">
-		</antcall>
-		
-		<antcall target="create-app-project">
-		</antcall>		
+	
 	</target>
 
 	<target name="create-app-jenkins" depends="-configureAnt">
@@ -54,8 +52,6 @@
 			environmentVariableValue="${APP_ENVIRONMENT}"
 		/>
 		
-		<antcall target="deploy-jenkins">
-		</antcall>
 	</target>
 
 	<target name="deploy-jenkins" depends="-configureAnt">
@@ -103,9 +99,7 @@
 		
 		<antcall target="restore-project">
 		</antcall>
-		
-		<antcall target="deploy-project">
-		</antcall>		
+			
 	</target>
 
 	<target name="deploy-project" depends="-configureAnt">
