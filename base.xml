@@ -38,6 +38,7 @@
 		<property name="APPLICATION" value="app" />
 		
 		<!-- Si no está definida la variable la cojemos como variable de entorno -->
+		<property name="env.APP_ENVIRONMENT" value="" />
 		<property name="APP_ENVIRONMENT" value="${env.APP_ENVIRONMENT}" />
 
 
@@ -66,9 +67,15 @@
 					<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRUEBAS_LOGIN}" />
 					<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRUEBAS_PASSWORD}" />	
 				</then>
-			</elseif>	
+			</elseif>
+			<elseif>
+				<equals arg1="${APP_ENVIRONMENT}" arg2="" />
+				<then>
+					<fail message="El valor de la variable de entorno APP_ENVIRONMENT no esta defina: Sus posibles valores deben ser PRODUCCION,PREPRODUCCION,PRUEBAS "/>	
+				</then>
+			</elseif>			
 			<else>
-				 <fail message="El valor de la variable de entorno APP_ENVIRONMENT no esta defino o no es valido: ${APP_ENVIRONMENT}"/>
+				 <fail message="El valor de la variable de entorno APP_ENVIRONMENT no es valido: ${APP_ENVIRONMENT}. Sus posibles valores deben ser PRODUCCION,PREPRODUCCION,PRUEBAS"/>
 			</else>
 		</if>
 		

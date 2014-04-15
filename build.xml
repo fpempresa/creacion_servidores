@@ -3,7 +3,7 @@
     <description>Crea y configura todos los servidores de un proyecto de software en OpenShift</description>
     <import file="base.xml"/>
 
-	<target name="default" depends="create-domain,create-app-jenkins,create-app-project,deploy-project" />
+	<target name="default" depends="create-domain,create-app-jenkins,deploy-jenkins,create-app-project,deploy-project" />
 	
 
 	<target name="create-domain" depends="-configureAnt">
@@ -49,14 +49,35 @@
 			environmentVariableName="APP_ENVIRONMENT" 
 			environmentVariableValue="${APP_ENVIRONMENT}"
 		/>
-			
-		<antcall target="show-jenkins-password">
-		</antcall>
+		
 	
 	</target>
 
+	<target name="deploy-jenkins" depends="-configureAnt">
+
+		<jenkinspasswordhashproperty     
+			name="JENKINS_PASSWORD_HASH" 
+			password="${SERVICES_MASTER_PASSWORD}" 
+		/>	
+	
+		<configureserver
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"
+			privateKeyFile="${PRIVATE_KEY}"
+			gitRepository="${GIT_REPOSITORY_JENKINS}"
+		>
+			<xmltask source="@{gitlocalpath}/.openshift/action_hooks/jenkins/system_builder/config.xml" dest="@{gitlocalpath}/.openshift/action_hooks/jenkins/system_builder/config.xml" failWithoutMatch="true">
+				<insert path="//passwordHash" xml="${JENKINS_PASSWORD_HASH}" />
+			</xmltask>		
+		</configureserver>		
+	
+	</target>	
+	
+	
 	<target name="create-app-project" depends="-configureAnt">
-		<antcall target="backup">
+		<antcall target="backup-project">
 		</antcall>
 	
 		<createprojectapplication	
@@ -66,7 +87,7 @@
 			applicationName="${APPLICATION}" 
 		/>
 		
-		<antcall target="restore">
+		<antcall target="restore-project">
 		</antcall>
 	</target>
 
@@ -83,7 +104,7 @@
 		</configureserver>
 	</target>
 	
-	<target name="backup" depends="-configureAnt">
+	<target name="backup-project" depends="-configureAnt">
 		<property name="env.OPENSHIFT_DATA_DIR" value=".." />
 		<property name="LOCAL_DIR_BACKUP" value="${env.OPENSHIFT_DATA_DIR}" />
 		<property name="FILE_BACKUP" value="backup" />
@@ -211,7 +232,7 @@
 		
 	</target>
 
-	<target name="restore" depends="-configureAnt">
+	<target name="restore-project" depends="-configureAnt">
 		<property name="env.OPENSHIFT_DATA_DIR" value=".." />
 		<property name="LOCAL_DIR_BACKUP" value="${env.OPENSHIFT_DATA_DIR}" />
 		<property name="FILE_BACKUP" value="backup" />
@@ -357,7 +378,9 @@
 		/>	
 	</target>	
 	
-	<target name="show-project-info" depends="-configureAnt">
+	
+	
+	<target name="show-info" depends="-configureAnt">
 		<!-- Mostrar la url de conexion de ssh de jenkins -->
 		
 		<applicationproperty     
@@ -365,7 +388,7 @@
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"  
-			name="SSH_URL" 
+			name="SSH_PROJECT_URL" 
 			applicationProperty="SshUrl"
 		/>
 
@@ -374,27 +397,16 @@
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"  
-			name="GIT_URL" 
+			name="GIT_PROJECT_URL" 
 			applicationProperty="GitUrl"
 		/>
-		
-		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${APPLICATION}</echo>
-		<echo>${SSH_URL}</echo>		
-		<echo>Git URL del domino ${DOMAIN} en aplicacion ${APPLICATION}</echo>
-		<echo>${GIT_URL}</echo>
-		
-		
-	</target>
-	
-	<target name="show-jenkins-info" depends="-configureAnt">
-		<!-- Mostrar la url de conexion de ssh de jenkins -->
 		
 		<applicationproperty     
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}"  
-			name="SSH_URL" 
+			name="SSH_JENKINS_URL" 
 			applicationProperty="SshUrl"
 		/>
 		
@@ -403,9 +415,18 @@
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}"  
-			name="GIT_URL" 
+			name="GIT_JENKINS_URL" 
 			applicationProperty="GitUrl"
 		/>
+		
+		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${APPLICATION}</echo>
+		<echo>${SSH_PROJECT_URL}</echo>		
+		<echo>Git URL del domino ${DOMAIN} en aplicacion ${APPLICATION}</echo>
+		<echo>${GIT_PROJECT_URL}</echo>		
+		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
+		<echo>${SSH_JENKINS_URL}</echo>		
+		<echo>Git URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
+		<echo>${GIT_JENKINS_URL}</echo>		
 		
 		<remote-exec   
 			userName="${OPENSHIFT_LOGIN}" 
@@ -413,26 +434,20 @@
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}" 
 			privateKeyFile="${PRIVATE_KEY}"
-			cmd="echo usuario:$JENKINS_USERNAME contraenya:$JENKINS_PASSWORD"
-		/>		
-		
-		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
-		<echo>${SSH_URL}</echo>		
-		<echo>Git URL del domino ${DOMAIN} en aplicacion ${JENKINS}</echo>
-		<echo>${GIT_URL}</echo>		
-		
+			cmd="echo usuario:$JENKINS_USERNAME"
+		/>
 		
 	</target>	
 
 	
-	<target name="show-log-catalina" depends="-configureAnt">
+	<target name="view-log" depends="-configureAnt">
 		<remote-exec 
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
-			cmd="cat $OPENSHIFT_JBOSSEWS_DIR/logs/catalina.out"
+			cmd="cat $OPENSHIFT_JBOSSEWS_DIR/logs/catalina.2014-04-12.log"
 		/>	
 	</target>
 	<target name="show-log-files" depends="-configureAnt">
