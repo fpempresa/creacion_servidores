@@ -17,6 +17,16 @@
 		<if>
 			<equals arg1="${ENVIRONMENT_RESPONSE}" arg2="${APP_ENVIRONMENT}" />
 			<then>
+				<destroyalldomains     
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}"
+					force="true" 
+				/>
+				<removeallpublickeys 
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+				/>			
+			
 				<createdomainandkeys 
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
