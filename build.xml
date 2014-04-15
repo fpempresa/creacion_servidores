@@ -16,17 +16,7 @@
 		/>	
 		<if>
 			<equals arg1="${ENVIRONMENT_RESPONSE}" arg2="${APP_ENVIRONMENT}" />
-			<then>
-				<destroyalldomains     
-					userName="${OPENSHIFT_LOGIN}" 
-					password="${OPENSHIFT_PASSWORD}"
-					force="true" 
-				/>
-				<removeallpublickeys 
-					userName="${OPENSHIFT_LOGIN}" 
-					password="${OPENSHIFT_PASSWORD}" 
-				/>			
-			
+			<then>			
 				<createdomainandkeys 
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
@@ -79,7 +69,7 @@
 			privateKeyFile="${PRIVATE_KEY}"
 			gitRepository="${GIT_REPOSITORY_JENKINS}"
 		>
-			<xmltask source="@{gitlocalpath}/.openshift/action_hooks/jenkins/system_builder/config.xml" dest="@{gitlocalpath}/.openshift/action_hooks/jenkins/system_builder/config.xml" failWithoutMatch="true">
+			<xmltask source="@{gitlocalpath}/.openshift/action_hooks/jenkins/users/system_builder/config.xml" dest="@{gitlocalpath}/.openshift/action_hooks/jenkins/users/system_builder/config.xml" failWithoutMatch="true">
 				<insert path="//passwordHash" xml="${JENKINS_PASSWORD_HASH}" />
 			</xmltask>	
 

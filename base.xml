@@ -48,7 +48,7 @@
 				<property name="PRIVATE_KEY" value="${PRODUCCION_PRIVATE_KEY}" />
 				<property name="DOMAIN" value="${PRODUCCION_DOMAIN}" />
 				<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRODUCCION_LOGIN}" />
-				<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRODUCCION_PASSWORD	}" />		
+				<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRODUCCION_PASSWORD}" />		
 			</then>
 			<elseif>
 				<equals arg1="${APP_ENVIRONMENT}" arg2="PREPRODUCCION" />
@@ -87,7 +87,7 @@
 	<target name="-changeUrlPrivateRepository">
 		<echo>Cambiando URL de repositorio privado de ${CONFIG_JOB_FILE}</echo>
 		<xmltask source="${CONFIG_JOB_FILE}" dest="${CONFIG_JOB_FILE}" failWithoutMatch="true">
-			<insert path="/project/scm/scms/hudson.plugins.git.GitSCM[2]/userRemoteConfigs/hudson.plugins.git.UserRemoteConfig/url" xml="Pepe" />
+			<insert path="/project/scm/scms/hudson.plugins.git.GitSCM[2]/userRemoteConfigs/hudson.plugins.git.UserRemoteConfig/url" xml="${GIT_REPOSITORY_PRIVATE}" />
 		</xmltask>
 	</target>
 	
