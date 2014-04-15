@@ -73,6 +73,11 @@
 				<insert path="//passwordHash" xml="${JENKINS_PASSWORD_HASH}" />
 			</xmltask>	
 
+			<xmltask source="@{gitlocalpath}/.openshift/action_hooks/jenkins/hudson.tasks.Mailer.xml" dest="@{gitlocalpath}/.openshift/action_hooks/jenkins/hudson.tasks.Mailer.xml" failWithoutMatch="true">
+				<insert path="//smtpAuthUsername" xml="${EMAIL}" />
+				<insert path="//smtpAuthPassword" xml="${SERVICES_MASTER_PASSWORD}" />
+			</xmltask>			
+			
             <foreach  param="CONFIG_JOB_FILE" target="-changeUrlPrivateRepository">
 				<path>
 					<fileset dir="@{gitlocalpath}/.openshift/action_hooks/jenkins/jobs" > 
