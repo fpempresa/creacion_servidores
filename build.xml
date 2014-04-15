@@ -87,8 +87,14 @@
 			</foreach>			
 			
 			
-		</configureserver>		
-	
+		</configureserver>	
+		
+		<restartapplication 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}" 
+		/>
 	</target>	
 		
 	<target name="create-app-project" depends="-configureAnt">
