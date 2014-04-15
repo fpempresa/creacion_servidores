@@ -462,17 +462,27 @@
 	
 	<target name="view-log" depends="-configureAnt">
 		<!-- Depende de las propiedades:
-			LOG_TYPE: Por defecto catalina
+			LOG_TYPE: El tipo de fichero
 			LOG_DATE: Solo si el log tiene fecha. El formato es YYYY-MM-DD. Por defecto la de hoy
 			LINES: Nº de lineas a mostrar. Por defecto 100
 		-->
-		<property name="LOG_TYPE" value="catalina" />	
 		<tstamp>
-			<format property="LOG_DATE" pattern="YYYY-MM-dd"/>
+			<format property="HOY" pattern="YYYY-MM-dd"/>
 		</tstamp>
-		<property name="LINES" value="100" />	
 		
+		<condition property="env.LOG_TYPE" else="catalina">
+		  <isset property="env.LOG_TYPE"/>
+		</condition>
+		<condition property="env.LOG_DATE" else="${HOY}">
+		  <isset property="env.LOG_DATE"/>
+		</condition>		
+		<condition property="env.LINES" else="100">
+		  <isset property="env.LINES"/>
+		</condition>		
 		
+		<property name="LOG_TYPE" value="${env.LOG_TYPE}" />	
+		<property name="LOG_DATE" value="${env.LOG_DATE}" />
+		<property name="LINES" value="${env.LINES}" />
 		
 		<if>
 			<equals arg1="${LOG_TYPE}" arg2="catalina" />
