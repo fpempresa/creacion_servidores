@@ -84,12 +84,6 @@
 		
     </target> 
 	
-	<target name="-changeUrlPrivateRepository">
-		<echo>Cambiando URL de repositorio privado de ${CONFIG_JOB_FILE}</echo>
-		<xmltask source="${CONFIG_JOB_FILE}" dest="${CONFIG_JOB_FILE}" failWithoutMatch="true">
-			<insert path="/project/scm/scms/hudson.plugins.git.GitSCM[2]/userRemoteConfigs/hudson.plugins.git.UserRemoteConfig/url" xml="${GIT_REPOSITORY_PRIVATE}" />
-		</xmltask>
-	</target>
 	
     <macrodef name="createdomainandkeys">
         <attribute name="userName" />
@@ -234,7 +228,7 @@
 			<echo>Directorio local del repositorio:@{gitlocalpath}</echo>
 		
 			<echo>Borrando los ficheros que pudiera haber en el directorio local</echo>
-			<delete  includeEmptyDirs="true" failonerror="false" >
+			<delete  includeEmptyDirs="true" failonerror="false">
 			  <fileset defaultexcludes="no"  dir="@{gitlocalpath}" includes="**/*"/>
 			</delete>	
 			<mkdir dir="@{gitlocalpath}" />
@@ -255,7 +249,7 @@
 				options="add upstream -m master @{gitRepository}"
 				dir="@{gitlocalpath}"
 			/>
-		
+<!--		
 			<echo>Pull del repositorio remoto:@{gitRepository}</echo>
 			<git 
 				command="pull" 
@@ -296,6 +290,7 @@
 			/>
 			
 			<echo>Iniciando push a OpenShift</echo>
+			
 			<gitpushapplication     
 				userName="@{userName}" 
 				password="@{password}" 
@@ -304,7 +299,7 @@
 				privateKeyFile="@{privateKeyFile}"
 				path="@{gitlocalpath}"
 			/>
-
+-->
 		
 			<echo>Finalizado la configuracion del servidor</echo>
 			
