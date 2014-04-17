@@ -612,9 +612,22 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
 			cmd="ls -l $OPENSHIFT_JBOSSEWS_DIR/logs"
 		/>	
+		
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
+			cmd="ls -l $OPENSHIFT_LOG_DIR"
+		/>			
+		
 	</target>
+	
 	<target name="show-env-project" depends="-configureAnt">
 		<remote-exec 
 			userName="${OPENSHIFT_LOGIN}" 
@@ -644,4 +657,7 @@
 			cmd="env | sort"
 		/>	
 	</target>
+	
+	
+	
 </project>

@@ -346,6 +346,7 @@
         <attribute name="domainName"  />
         <attribute name="applicationName" />
 		<attribute name="privateKeyFile"  />
+		<attribute name="failonerror" default="yes" />
 		<attribute name="cmd" />
 		<sequential>	
 			<applicationproperty     
@@ -378,6 +379,7 @@
 				username="${SSH_USER}"
 				port="${SSH_PORT}"
 				keyfile="@{privateKeyFile}"
+				failonerror="@{failonerror}"
 				command="@{cmd}" trust="true"
 			/>
 		</sequential>	
