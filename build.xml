@@ -3,7 +3,7 @@
     <description>Crea y configura todos los servidores de un proyecto de software en OpenShift</description>
     <import file="base.xml"/>
 
-	<target name="default" depends="-configureAnt,create-domain,create-app-jenkins,deploy-jenkins,create-app-project">
+	<target name="default" depends="-configureAnt,create-domain,create-app-jenkins,deploy-jenkins,create-app-project-no-backup">
 	</target>
 	
 	
@@ -32,6 +32,20 @@
 	</target>
 
 	<target name="create-app-jenkins" depends="-configureAnt">
+		<trycatch property="exception" >
+			<try>
+				<destroyapplication     
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+					domainName="${DOMAIN}" 
+					applicationName="${JENKINS}"  
+				/>
+			</try>
+			<catch>
+				<echo>No se pudo borrar la aplicación ${JENKINS}</echo>
+			</catch>
+		</trycatch>	
+	
 		<createapplication     
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
@@ -118,10 +132,8 @@
 			applicationName="${JENKINS}" 
 		/>
 	</target>	
-		
-	<target name="create-app-project" depends="-configureAnt">
-		<antcall target="backup-project">
-		</antcall>
+	
+	<target name="create-app-project-no-backup" depends="-configureAnt">
 	
 		<createprojectapplication	
 			userName="${OPENSHIFT_LOGIN}" 
@@ -129,6 +141,16 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}" 
 		/>
+		
+			
+	</target>
+	
+	<target name="create-app-project" depends="-configureAnt">
+		<antcall target="backup-project">
+		</antcall>
+	
+		<antcall target="create-app-project-no-backup">
+		</antcall>
 		
 		<antcall target="restore-project">
 		</antcall>

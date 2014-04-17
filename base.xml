@@ -2,9 +2,6 @@
 <project basedir="." name="base">
 	
     <target name="-configureAnt">
-        <echo>Configurando librerias de Ant</echo>
-	
-		
 		<!-- OpenShift -->
 		<taskdef  resource="es/logongas/openshift/ant/antlib.xml" />
 		
@@ -79,8 +76,7 @@
 			</else>
 		</if>
 		
-		<echo>${DOMAIN}</echo>
-		<echo>${OPENSHIFT_LOGIN}</echo>
+		<echo>Entorno de ${APP_ENVIRONMENT} en la cuenta ${OPENSHIFT_LOGIN} en el dominio ${DOMAIN}</echo>
 		
     </target> 
 	
@@ -249,7 +245,7 @@
 				options="add upstream -m master @{gitRepository}"
 				dir="@{gitlocalpath}"
 			/>
-<!--		
+		
 			<echo>Pull del repositorio remoto:@{gitRepository}</echo>
 			<git 
 				command="pull" 
@@ -299,7 +295,7 @@
 				privateKeyFile="@{privateKeyFile}"
 				path="@{gitlocalpath}"
 			/>
--->
+
 		
 			<echo>Finalizado la configuracion del servidor</echo>
 			
