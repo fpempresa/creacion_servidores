@@ -183,6 +183,16 @@
 				environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
 			/>
 			
+			<echo>Añadiendo variable de entorno LOGENTRIES_LICENSE_KEY</echo>
+			<addenvironmentvariable     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				environmentVariableName="LOGENTRIES_LICENSE_KEY" 
+				environmentVariableValue="${LOGENTRIES_LICENSE_KEY}"
+			/>
+
 			<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
 			<addenvironmentvariable     
 				userName="@{userName}" 
