@@ -590,7 +590,12 @@
 					<property name="LOG_FILE" value="$OPENSHIFT_LOG_DIR/${LOG_TYPE}.log" />	
 				</then>
 			</elseif>
-			
+			<elseif>
+				<equals arg1="${LOG_TYPE}" arg2="logentries" />
+				<then>
+					<property name="LOG_FILE" value="$OPENSHIFT_LOG_DIR/${LOG_TYPE}.log" />	
+				</then>
+			</elseif>
 			<else>
 				 <fail message="El valor del tipo de log no es valido o no esta definido. ${LOG_TYPE}"/>
 			</else>
