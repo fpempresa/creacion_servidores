@@ -8,54 +8,66 @@ Es necesario tener instalado Git, el JDK 7 y la herramienta Apache Ant
 
 ## Configuracion 
 Antes de poder ejecutar el Scrip de cracion de los servidores es necesario definir las siguientes propiedades
-en el fichero `../private/proyecto.properties` .Este fichero se obtendrá que un repositorio privado coya contraseña será `SERVICES_MASTER_PASSWORD`
+en el fichero `../private/proyecto.properties` .Este fichero se obtendrá que un repositorio privado.
 
 	#La contrasenya de los servicios que se instalan , no de los servidores de openshift
 	SERVICES_MASTER_PASSWORD=
-	APP_NAME=fpempresa
+	SERVICES_MASTER_EMAIL=
+	PROJECT_NAME=
 
-	OPENSHIFT_PRODUCCION_LOGIN=@fpmislata.com
+
+	OPENSHIFT_PRODUCCION_LOGIN=
 	OPENSHIFT_PRODUCCION_PASSWORD=
 
-	OPENSHIFT_PREPRODUCCION_LOGIN=@fpmislata.com
+	OPENSHIFT_PREPRODUCCION_LOGIN=
 	OPENSHIFT_PREPRODUCCION_PASSWORD=
 
-	OPENSHIFT_PRUEBAS_LOGIN=@fpmislata.com
+	OPENSHIFT_PRUEBAS_LOGIN=
 	OPENSHIFT_PRUEBAS_PASSWORD=
 
-	OPENSHIFT_DESARROLLO_LOGIN=@fpmislata.com
-	OPENSHIFT_DESARROLLO_PASSWORD=
 
-	OPENSHIFT_LOG_LOGIN=@fpmislata.com
-	OPENSHIFT_LOG_PASSWORD=
+	GIT_REPOSITORY_APP=
+	GIT_REPOSITORY_JENKINS=
+	#La URL de este mismo repositorio pero con usuario y contrasenya
+	GIT_REPOSITORY_PRIVATE=https://usuario:contrasenya@url.git
 
-
-	GIT_REPOSITORY_APP=https://github.com/fpempresa/fpempresa.git
-	GIT_REPOSITORY_JENKINS=https://github.com/fpempresa/servidor_jenkins.git
-	GIT_REPOSITORY_SONAR=https://github.com/fpempresa/servidor_sonar.git
-	GIT_REPOSITORY_LOGSTASH=https://github.com/fpempresa/servidor_logstash.git
-	GIT_REPOSITORY_ELASTICSEARCH=https://github.com/fpempresa/servidor_elasticsearch.git
-	GIT_REPOSITORY_KIBANA=https://github.com/fpempresa/servidor_kibana.git
-
-	
-
-	
-	#OAuth para hacer las copias de seguridad de la base de datos
-	GOOGLE_PRODUCCION_CLIENT_ID=
-	GOOGLE_PRODUCCION_CLIENT_SECRET=
-	GOOGLE_PREPRODUCCION_CLIENT_ID=
-	GOOGLE_PREPRODUCCION_CLIENT_SECRET=
-	GOOGLE_PRUEBAS_CLIENT_ID=
-	GOOGLE_PRUEBAS_CLIENT_SECRET=
 
 	#Copia de seguridad extra por FTP
 	FTP_BACKUP_USER=
 	FTP_BACKUP_PASSWORD=
 	FTP_BACKUP_HOST=
-	FTP_BACKUP_FILENAME=
+	FTP_BACKUP_ROOT_PATH=
+
+	#newrelic
+	NEW_RELIC_LICENSE_KEY=
+	#logentries
+	LOGENTRIES_LICENSE_KEY=
+
+	LOGENTRIES_PRODUCCION_HOST_KEY=
+	LOGENTRIES_PREPRODUCCION_HOST_KEY=
+	LOGENTRIES_PRUEBAS_HOST_KEY=
+
+## Variable de entorno
+Es ncesario crear la variable de entorno `APP_ENVIRONMENT` con el valor del entorno en el que estamos.
+Los posibles valores son `PRODUCCION` , `PREPRODUCCION` o `PRUEBAS`
+
+Por ejemplo en Windows ejecutar
+	APP_ENVIRONMENT=PRODUCCION
+	
+Por ejemplo en Linux ejecutar
+	export APP_ENVIRONMENT=PREPRODUCCION
 	
 ## Creacion
 
 En el directorio raiz del proyecto ejecutar:
 
     ant
+
+## New Relic
+Es necesario obtener el valor de la clave de la licencia de New Relic en la propia pagina
+
+##Logentries
+Es necesario crear previamente los servidores `app-pro$PROJECT_NAME` , `app-pre$PROJECT_NAME` y `app-pru$PROJECT_NAME`
+Obteniendo las claves de los servidores. Está ne la URL en el parametro `id`.
+Tambien es necesaria la licencia del usuario.
+

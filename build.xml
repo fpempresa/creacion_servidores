@@ -644,15 +644,6 @@
 		/>	
 	</target>	
 	<target name="show-env-jenkins" depends="-configureAnt">
-		<addenvironmentvariable     
-			userName="${OPENSHIFT_LOGIN}" 
-			password="${OPENSHIFT_PASSWORD}" 
-			domainName="${DOMAIN}" 
-			applicationName="${JENKINS}"
-			environmentVariableName="APP_ENVIRONMENT" 
-			environmentVariableValue="${APP_ENVIRONMENT}"
-		/>	
-	
 		<remote-exec 
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
