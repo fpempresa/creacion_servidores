@@ -45,7 +45,8 @@
 				<property name="PRIVATE_KEY" value="${PRODUCCION_PRIVATE_KEY}" />
 				<property name="DOMAIN" value="${PRODUCCION_DOMAIN}" />
 				<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRODUCCION_LOGIN}" />
-				<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRODUCCION_PASSWORD}" />		
+				<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRODUCCION_PASSWORD}" />	
+				<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PRODUCCION_HOST_KEY}" />	
 			</then>
 			<elseif>
 				<equals arg1="${APP_ENVIRONMENT}" arg2="PREPRODUCCION" />
@@ -54,6 +55,7 @@
 					<property name="DOMAIN" value="${PREPRODUCCION_DOMAIN}" />
 					<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PREPRODUCCION_LOGIN}" />
 					<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PREPRODUCCION_PASSWORD}" />	
+					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PREPRODUCCION_HOST_KEY}" />						
 				</then>
 			</elseif>
 			<elseif>
@@ -63,6 +65,7 @@
 					<property name="DOMAIN" value="${PRUEBAS_DOMAIN}" />
 					<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRUEBAS_LOGIN}" />
 					<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRUEBAS_PASSWORD}" />	
+					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PRUEBAS_HOST_KEY}" />						
 				</then>
 			</elseif>
 			<elseif>
@@ -192,7 +195,17 @@
 				environmentVariableName="LOGENTRIES_LICENSE_KEY" 
 				environmentVariableValue="${LOGENTRIES_LICENSE_KEY}"
 			/>
-
+			
+			<echo>Añadiendo variable de entorno LOGENTRIES_HOST_KEY</echo>
+			<addenvironmentvariable     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				environmentVariableName="LOGENTRIES_HOST_KEY" 
+				environmentVariableValue="${LOGENTRIES_HOST_KEY}"
+			/>
+			
 			<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
 			<addenvironmentvariable     
 				userName="@{userName}" 
