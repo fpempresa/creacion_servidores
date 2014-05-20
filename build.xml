@@ -559,7 +559,7 @@
 		/>	
 	</target>	
 	
-	<target name="show-info" depends="-configureAnt,show-info-jenkins,show-env-jenkins,show-info-project,show-env-project,show-ps-project,show-ps-project">
+	<target name="show-info" depends="-configureAnt,show-info-jenkins,show-env-jenkins,show-ps-jenkins,show-info-project,show-env-project,show-ps-project">
 		
 	</target>	
 	

@@ -100,8 +100,7 @@
 		<echo>Entorno de ${APP_ENVIRONMENT} en la cuenta ${OPENSHIFT_LOGIN} en el dominio ${DOMAIN}</echo>
 		
     </target> 
-	
-    <target name="kk" depends="-configureAnt" /> 
+ 
 
     <macrodef name="createdomainandkeys">
         <attribute name="userName" />
