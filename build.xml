@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="proyecto_software" default="default" basedir=".">
+<project xmlns:props="antlib:org.apache.ant.props"  name="proyecto_software" default="default" basedir="." >
     <description>Crea y configura todos los servidores de un proyecto de software en OpenShift</description>
+	
+	<propertyhelper>
+		<props:nested />
+	</propertyhelper>
+	
     <import file="base.xml"/>
-
+	
+	
 	<target name="default" depends="-configureAnt,create-domain,create-app-jenkins,deploy-jenkins,create-app-project-no-backup">
 	</target>
 	
@@ -30,7 +36,75 @@
 		</if>
 	
 	</target>
+	<target name="addallalias" depends="-configureAnt" >
 
+		<echo>Borrando todos los alias</echo>
+		
+		<removeallalias 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>
+
+		<if>
+			<length string="${DOMAIN_NAME_1}" trim="true" when="greater" length="0" />
+			<then>
+				<echo>Anyadiendo alias ${DOMAIN_NAME_1}</echo>
+				<addalias 
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+					domainName="${DOMAIN}" 
+					applicationName="${APPLICATION}" 
+					alias="${DOMAIN_NAME_1}"
+				/>		
+			</then>
+		</if>
+		<if>
+			<length string="${DOMAIN_NAME_2}" trim="true" when="greater" length="0" />
+			<then>
+				<echo>Anyadiendo alias ${DOMAIN_NAME_2}</echo>
+				<addalias 
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+					domainName="${DOMAIN}" 
+					applicationName="${APPLICATION}" 
+					alias="${DOMAIN_NAME_2}"
+				/>		
+					
+			</then>
+		</if>	
+		<if>
+			<length string="${DOMAIN_NAME_3}" trim="true" when="greater" length="0" />
+			<then>
+				<echo>Anyadiendo alias ${DOMAIN_NAME_3}</echo>		
+				<addalias 
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+					domainName="${DOMAIN}" 
+					applicationName="${APPLICATION}" 
+					alias="${DOMAIN_NAME_3}"
+				/>						
+			</then>
+		</if>
+		<if>
+			<length string="${DOMAIN_NAME_4}" trim="true" when="greater" length="0" />
+			<then>
+				<echo>Anyadiendo alias ${DOMAIN_NAME_4}</echo>	
+				<addalias 
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+					domainName="${DOMAIN}" 
+					applicationName="${APPLICATION}" 
+					alias="${DOMAIN_NAME_4}"
+				/>					
+			</then>
+		</if>		
+	</target>	
+
+				
+
+	
 	<target name="create-app-jenkins" depends="-configureAnt">
 		<trycatch property="exception" >
 			<try>
@@ -111,6 +185,7 @@
 		
 	</target>
 
+	
 	<target name="deploy-jenkins" depends="-configureAnt">
 	
 		<configureserver
@@ -122,8 +197,10 @@
 			gitRepository="${GIT_REPOSITORY_JENKINS}"
 		>		
 			
-			
+		    <foreach target="-set-git-source-code-environment-variable" param="i" list="1,2,3,4,5,6,7,8,9" inheritall="true" inheritrefs="true" />	
 		</configureserver>	
+		
+
 		
 		<restartapplication 
 			userName="${OPENSHIFT_LOGIN}" 
@@ -131,6 +208,41 @@
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}" 
 		/>
+	</target>	
+	
+	<target name="-set-git-source-code-environment-variable">
+		<if>
+		 <equals arg1="${GIT_REPOSITORY_SOURCE_CODE_${i}}" arg2="" />
+		 <then>
+		   <echo message="La variable GIT_REPOSITORY_SOURCE_CODE_${i} no tiene valor" />
+		 </then>
+		 <else>
+					<addenvironmentvariable     
+						userName="${OPENSHIFT_LOGIN}" 
+						password="${OPENSHIFT_PASSWORD}" 
+						domainName="${DOMAIN}" 
+						applicationName="${JENKINS}"
+						environmentVariableName="GIT_REPOSITORY_SOURCE_CODE_${i}" 
+						environmentVariableValue="${GIT_REPOSITORY_SOURCE_CODE_${i}}"
+					/>
+		 </else>
+		</if>
+		<if>
+		 <equals arg1="${TARGET_DIR_REPOSITORY_SOURCE_CODE_${i}}" arg2="" />
+		 <then>
+		   <echo message="La variable TARGET_DIR_REPOSITORY_SOURCE_CODE_${i} no tiene valor" />
+		 </then>
+		 <else>
+			<addenvironmentvariable     
+				userName="${OPENSHIFT_LOGIN}" 
+				password="${OPENSHIFT_PASSWORD}" 
+				domainName="${DOMAIN}" 
+				applicationName="${JENKINS}"
+				environmentVariableName="TARGET_DIR_REPOSITORY_SOURCE_CODE_${i}" 
+				environmentVariableValue="${TARGET_DIR_REPOSITORY_SOURCE_CODE_${i}}"
+			/>		
+		 </else>
+		</if>
 	</target>	
 	
 	<target name="create-app-project-no-backup" depends="-configureAnt">
@@ -166,7 +278,7 @@
 			privateKeyFile="${PRIVATE_KEY}"
 			gitRepository="${GIT_REPOSITORY_APP}"
 		>
-			<copy file="../${PROJECT_NAME}/dist/${PROJECT_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />	
+			<copy file="../${TARGET_DIR_REPOSITORY_SOURCE_CODE_1}/dist/${PROJECT_NAME}.war" tofile="@{gitlocalpath}/webapps/ROOT.war" overwrite="true" />	
 		</configureserver>
 	</target>
 	

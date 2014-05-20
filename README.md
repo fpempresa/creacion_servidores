@@ -25,12 +25,47 @@ en el fichero `../private/proyecto.properties` .Este fichero se obtendrá que un
 	OPENSHIFT_PRUEBAS_LOGIN=
 	OPENSHIFT_PRUEBAS_PASSWORD=
 
-
+    DOMAIN_NAME_PRODUCCION_1=
+    DOMAIN_NAME_PRODUCCION_2=
+    DOMAIN_NAME_PRODUCCION_3=
+    DOMAIN_NAME_PRODUCCION_4=
+    
+    DOMAIN_NAME_PREPRODUCCION_1=
+    DOMAIN_NAME_PREPRODUCCION_2=
+    DOMAIN_NAME_PREPRODUCCION_3=
+    DOMAIN_NAME_PREPRODUCCION_4=
+    
+    DOMAIN_NAME_PRUEBAS_1=
+    DOMAIN_NAME_PRUEBAS_2=
+    DOMAIN_NAME_PRUEBAS_3=
+    DOMAIN_NAME_PRUEBAS_4=
+	
+	
 	GIT_REPOSITORY_APP=https://github.com/fpempresa/servidor_aplicacion.git
 	GIT_REPOSITORY_JENKINS=https://github.com/fpempresa/servidor_jenkins.git
 	#La URL de este mismo repositorio pero con usuario y contrasenya
 	GIT_REPOSITORY_PRIVATE=https://usuario:contrasenya@url.git
 
+    GIT_REPOSITORY_SOURCE_CODE_1=https://github.com/fpempresa/fpempresa.git
+    GIT_REPOSITORY_SOURCE_CODE_2=https://github.com/logongas/ix3.git
+    GIT_REPOSITORY_SOURCE_CODE_3=https://github.com/logongas/ix3security.git
+    GIT_REPOSITORY_SOURCE_CODE_4=https://github.com/logongas/ix3web.git
+    GIT_REPOSITORY_SOURCE_CODE_5=
+    GIT_REPOSITORY_SOURCE_CODE_6=
+    GIT_REPOSITORY_SOURCE_CODE_7=
+    GIT_REPOSITORY_SOURCE_CODE_8=
+    GIT_REPOSITORY_SOURCE_CODE_9=
+    
+	#Este directorio debe tener el mismo valor que PROJECT_NAME
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_1=fpempresa
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_2=ix3
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_3=ix3security
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_4=ix3web
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_5=
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_6=
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_7=
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_8=
+    TARGET_DIR_REPOSITORY_SOURCE_CODE_9=
 
 	#Copia de seguridad por FTP
 	FTP_BACKUP_USER=

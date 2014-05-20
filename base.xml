@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." name="base">
+<project xmlns:props="antlib:org.apache.ant.props"  basedir="." name="base" >
 	
     <target name="-configureAnt">
 		<!-- OpenShift -->
 		<taskdef  resource="es/logongas/openshift/ant/antlib.xml" />
 		
         <!-- El try-cath -->
-        <taskdef  resource="net/sf/antcontrib/antcontrib.properties"/>
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
+		<typedef  uri="antlib:org.apache.ant.props" resource="org/apache/ant/props/antlib.xml" />
+		
         <!-- Manejo de ficheros XML -->
         <taskdef  name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
 
@@ -38,7 +40,7 @@
 		<property name="env.APP_ENVIRONMENT" value="" />
 		<property name="APP_ENVIRONMENT" value="${env.APP_ENVIRONMENT}" />
 
-
+		
 		<if>
 			<equals arg1="${APP_ENVIRONMENT}" arg2="PRODUCCION" />
 			<then>
@@ -47,6 +49,11 @@
 				<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRODUCCION_LOGIN}" />
 				<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRODUCCION_PASSWORD}" />	
 				<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PRODUCCION_HOST_KEY}" />	
+				
+				<property name="DOMAIN_NAME_1" value="${DOMAIN_NAME_PRODUCCION_1}" />
+				<property name="DOMAIN_NAME_2" value="${DOMAIN_NAME_PRODUCCION_2}" />
+				<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PRODUCCION_3}" />
+				<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRODUCCION_4}" />				
 			</then>
 			<elseif>
 				<equals arg1="${APP_ENVIRONMENT}" arg2="PREPRODUCCION" />
@@ -55,7 +62,12 @@
 					<property name="DOMAIN" value="${PREPRODUCCION_DOMAIN}" />
 					<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PREPRODUCCION_LOGIN}" />
 					<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PREPRODUCCION_PASSWORD}" />	
-					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PREPRODUCCION_HOST_KEY}" />						
+					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PREPRODUCCION_HOST_KEY}" />
+
+					<property name="DOMAIN_NAME_1" value="${DOMAIN_NAME_PREPRODUCCION_1}" />
+					<property name="DOMAIN_NAME_2" value="${DOMAIN_NAME_PREPRODUCCION_2}" />
+					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PREPRODUCCION_3}" />
+					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PREPRODUCCION_4}" />					
 				</then>
 			</elseif>
 			<elseif>
@@ -65,7 +77,12 @@
 					<property name="DOMAIN" value="${PRUEBAS_DOMAIN}" />
 					<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRUEBAS_LOGIN}" />
 					<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRUEBAS_PASSWORD}" />	
-					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PRUEBAS_HOST_KEY}" />						
+					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PRUEBAS_HOST_KEY}" />	
+					
+					<property name="DOMAIN_NAME_1" value="${DOMAIN_NAME_PRUEBAS_1}" />
+					<property name="DOMAIN_NAME_2" value="${DOMAIN_NAME_PRUEBAS_2}" />
+					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PRUEBAS_3}" />
+					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRUEBAS_4}" />										
 				</then>
 			</elseif>
 			<elseif>
@@ -79,11 +96,13 @@
 			</else>
 		</if>
 		
+		
 		<echo>Entorno de ${APP_ENVIRONMENT} en la cuenta ${OPENSHIFT_LOGIN} en el dominio ${DOMAIN}</echo>
 		
     </target> 
 	
-	
+    <target name="kk" depends="-configureAnt" /> 
+
     <macrodef name="createdomainandkeys">
         <attribute name="userName" />
         <attribute name="password"  />
@@ -371,7 +390,11 @@
 		<attribute name="privateKeyFile"  />
 		<attribute name="failonerror" default="yes" />
 		<attribute name="cmd" />
-		<sequential>	
+		<sequential>
+			<local name="SSH_HOST"/>
+			<local name="SSH_USER"/>
+			<local name="SSH_PORT"/>
+		
 			<applicationproperty     
 				userName="@{userName}" 
 				password="@{password}" 
