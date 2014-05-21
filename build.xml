@@ -181,8 +181,35 @@
 			applicationName="${JENKINS}"
 			environmentVariableName="GIT_REPOSITORY_PRIVATE" 
 			environmentVariableValue="${GIT_REPOSITORY_PRIVATE}"
-		/>		
+		/>	
 		
+		<echo>Añadiendo variable de entorno NEW_RELIC_LICENSE_KEY</echo>
+		<addenvironmentvariable     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"  
+			environmentVariableName="NEW_RELIC_LICENSE_KEY" 
+			environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
+		/>
+		<echo>Añadiendo variable de entorno JAVA_TOOL_OPTIONS</echo>
+		<applicationproperty     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}" 
+			name="UUID" 
+			applicationProperty="UUID"
+		/>
+		
+		<addenvironmentvariable     
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"
+			environmentVariableName="JAVA_TOOL_OPTIONS" 
+			environmentVariableValue="-javaagent:/var/lib/openshift/${UUID}/app-root/runtime/repo/.openshift/action_hooks/newrelic/newrelic.jar "
+		/>
 	</target>
 
 	
