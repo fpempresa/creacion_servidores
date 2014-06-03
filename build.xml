@@ -411,6 +411,7 @@
 			password="${FTP_BACKUP_PASSWORD}"
 			remotedir="${FTP_BACKUP_ROOT_PATH}"
 			passive="yes"
+			retriesAllowed="10"
 		>
 			<fileset file="${LOCAL_DIR_BACKUP}/${FILE_MENSUAL}"/>
 		</ftp>
@@ -429,6 +430,7 @@
 			password="${FTP_BACKUP_PASSWORD}"
 			remotedir="${FTP_BACKUP_ROOT_PATH}"
 			passive="yes"
+			retriesAllowed="10"
 		>
 			<fileset file="${LOCAL_DIR_BACKUP}/${FILE_DIARIO}"/>
 		</ftp>
