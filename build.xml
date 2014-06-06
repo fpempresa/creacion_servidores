@@ -280,7 +280,8 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}" 
 		/>
-		
+		<antcall target="addallalias">
+		</antcall>	
 			
 	</target>
 	
@@ -290,7 +291,7 @@
 	
 		<antcall target="create-app-project-no-backup">
 		</antcall>
-		
+	
 		<antcall target="restore-project">
 		</antcall>
 			
