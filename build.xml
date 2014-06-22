@@ -297,6 +297,20 @@
 			
 	</target>
 
+	<target name="delete-create-database-project" depends="-configureAnt">
+		<antcall target="backup-project">
+		</antcall>
+	
+		<deletecreatedatabase	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>
+	
+			
+	</target>	
+	
 	<target name="deploy-project" depends="-configureAnt">
 		<configureserver
 			userName="${OPENSHIFT_LOGIN}" 

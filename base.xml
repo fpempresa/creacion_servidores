@@ -248,7 +248,39 @@
         </sequential>
     </macrodef> 
 	
-
+    <macrodef name="deletecreatedatabase">
+        <attribute name="userName" />
+        <attribute name="password"  />
+        <attribute name="domainName"  />
+        <attribute name="applicationName" />
+        <sequential>
+			<echo>Borrando base de datos en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>
+			
+			<trycatch property="exception" >
+				<try>
+					<removecartridge     
+						userName="@{userName}" 
+						password="@{password}" 
+						domainName="@{domainName}" 
+						applicationName="@{applicationName}"  
+						cartridgeName="mysql"   
+					/>
+				</try>
+				<catch>
+					<echo>No se pudo borrar el cartucho mysql en la aplicacion @{applicationName} del dominio @{applicationName}</echo>
+				</catch>
+			</trycatch>	
+			<addcartridge     
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				cartridgeName="mysql" 
+			/>
+		</sequential>	
+	</macrodef>
+	
+	
     <macrodef name="configureserver">
         <attribute name="userName" />
         <attribute name="password"  />
