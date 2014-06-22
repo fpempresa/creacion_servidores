@@ -240,7 +240,7 @@
 				password="@{password}" 
 				domainName="@{domainName}" 
 				applicationName="@{applicationName}"  
-				cartridgeName="mysql" 
+				cartridgeName="mysql-5.5" 
 			/>
 
 			<echo>Finalizado la creacion del servidor de aplicaciones</echo>
@@ -263,7 +263,7 @@
 						password="@{password}" 
 						domainName="@{domainName}" 
 						applicationName="@{applicationName}"  
-						cartridgeName="mysql"   
+						cartridgeName="mysql-5.5"   
 					/>
 				</try>
 				<catch>
@@ -275,7 +275,7 @@
 				password="@{password}" 
 				domainName="@{domainName}" 
 				applicationName="@{applicationName}"  
-				cartridgeName="mysql" 
+				cartridgeName="mysql-5.5" 
 			/>
 		</sequential>	
 	</macrodef>
