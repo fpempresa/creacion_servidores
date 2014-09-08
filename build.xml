@@ -809,6 +809,28 @@
 			cmd="env | sort"
 		/>	
 	</target>
+	<target name="delete-log-files" depends="-configureAnt">
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
+			cmd="rm $OPENSHIFT_JBOSSEWS_DIR/logs/*.txt"
+		/>	
+		
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}"
+			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
+			cmd="rm $OPENSHIFT_LOG_DIR/*.log"
+		/>			
+		
+	</target>	
 	
 	<target name="show-ps-project" depends="-configureAnt">
 		<remote-exec 
