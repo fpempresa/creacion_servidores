@@ -817,7 +817,7 @@
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
 			failonerror="no"
-			cmd="rm $OPENSHIFT_JBOSSEWS_DIR/logs/*.txt"
+			cmd="rm -v $OPENSHIFT_JBOSSEWS_DIR/logs/*.txt"
 		/>	
 		
 		<remote-exec 
@@ -827,7 +827,7 @@
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
 			failonerror="no"
-			cmd="rm $OPENSHIFT_LOG_DIR/*.log"
+			cmd="rm -v $OPENSHIFT_LOG_DIR/*.log"
 		/>			
 		
 	</target>	
