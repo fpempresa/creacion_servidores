@@ -830,6 +830,15 @@
 			cmd="rm -v $OPENSHIFT_LOG_DIR/*.log"
 		/>			
 		
+		<remote-exec 
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"
+			privateKeyFile="${PRIVATE_KEY}"
+			cmd="rm -v $OPENSHIFT_JENKINS_LOG_DIR/*.log"
+		/>		
+		
 	</target>	
 	
 	<target name="show-ps-project" depends="-configureAnt">
