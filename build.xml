@@ -836,6 +836,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}"
 			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
 			cmd="rm -v $OPENSHIFT_JENKINS_LOG_DIR/*.log"
 		/>		
 		
