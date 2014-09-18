@@ -24,6 +24,7 @@
 			<equals arg1="${ENVIRONMENT_RESPONSE}" arg2="${APP_ENVIRONMENT}" />
 			<then>			
 				<createdomainandkeys 
+					serverUrl="${OPENSHIFT_SERVER_URL}"
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
 					domainName="${DOMAIN}" 
@@ -41,6 +42,7 @@
 		<echo>Borrando todos los alias</echo>
 		
 		<removeallalias 
+			serverUrl="${OPENSHIFT_SERVER_URL}"		
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -52,6 +54,7 @@
 			<then>
 				<echo>Anyadiendo alias ${DOMAIN_NAME_1}</echo>
 				<addalias 
+					serverUrl="${OPENSHIFT_SERVER_URL}"	
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
 					domainName="${DOMAIN}" 
@@ -65,6 +68,7 @@
 			<then>
 				<echo>Anyadiendo alias ${DOMAIN_NAME_2}</echo>
 				<addalias 
+					serverUrl="${OPENSHIFT_SERVER_URL}"	
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
 					domainName="${DOMAIN}" 
@@ -79,6 +83,7 @@
 			<then>
 				<echo>Anyadiendo alias ${DOMAIN_NAME_3}</echo>		
 				<addalias 
+					serverUrl="${OPENSHIFT_SERVER_URL}"	
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
 					domainName="${DOMAIN}" 
@@ -92,6 +97,7 @@
 			<then>
 				<echo>Anyadiendo alias ${DOMAIN_NAME_4}</echo>	
 				<addalias 
+					serverUrl="${OPENSHIFT_SERVER_URL}"	
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
 					domainName="${DOMAIN}" 
@@ -108,7 +114,8 @@
 	<target name="create-app-jenkins" depends="-configureAnt">
 		<trycatch property="exception" >
 			<try>
-				<destroyapplication     
+				<destroyapplication  
+					serverUrl="${OPENSHIFT_SERVER_URL}"	
 					userName="${OPENSHIFT_LOGIN}" 
 					password="${OPENSHIFT_PASSWORD}" 
 					domainName="${DOMAIN}" 
@@ -121,6 +128,7 @@
 		</trycatch>	
 	
 		<createapplication     
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -131,7 +139,8 @@
 		/>
 		
 		<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
-		<addenvironmentvariable     
+		<addenvironmentvariable  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -146,7 +155,8 @@
 		/>	
 		
 		<echo>Añadiendo variable de entorno JENKINS_PASSWORD_HASH</echo>
-		<addenvironmentvariable     
+		<addenvironmentvariable 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -155,7 +165,8 @@
 			environmentVariableValue="${JENKINS_PASSWORD_HASH}"
 		/>
 		<echo>Añadiendo variable de entorno SERVICES_MASTER_EMAIL</echo>
-		<addenvironmentvariable     
+		<addenvironmentvariable   
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -164,7 +175,8 @@
 			environmentVariableValue="${SERVICES_MASTER_EMAIL}"
 		/>
 		<echo>Añadiendo variable de entorno SERVICES_MASTER_PASSWORD</echo>
-		<addenvironmentvariable     
+		<addenvironmentvariable  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -174,7 +186,8 @@
 		/>
 
 		<echo>Añadiendo variable de entorno GIT_REPOSITORY_PRIVATE</echo>
-		<addenvironmentvariable     
+		<addenvironmentvariable  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -184,7 +197,8 @@
 		/>	
 		
 		<echo>Añadiendo variable de entorno NEW_RELIC_LICENSE_KEY</echo>
-		<addenvironmentvariable     
+		<addenvironmentvariable 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -193,7 +207,8 @@
 			environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
 		/>
 		<echo>Añadiendo variable de entorno JAVA_TOOL_OPTIONS</echo>
-		<applicationproperty     
+		<applicationproperty
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -202,7 +217,8 @@
 			applicationProperty="UUID"
 		/>
 		
-		<addenvironmentvariable     
+		<addenvironmentvariable
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -216,6 +232,7 @@
 	<target name="deploy-jenkins" depends="-configureAnt">
 	
 		<configureserver
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -230,6 +247,7 @@
 
 		
 		<restartapplication 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -244,7 +262,8 @@
 		   <echo message="La variable GIT_REPOSITORY_SOURCE_CODE_${i} no tiene valor" />
 		 </then>
 		 <else>
-					<addenvironmentvariable     
+					<addenvironmentvariable  
+						serverUrl="${OPENSHIFT_SERVER_URL}"	
 						userName="${OPENSHIFT_LOGIN}" 
 						password="${OPENSHIFT_PASSWORD}" 
 						domainName="${DOMAIN}" 
@@ -260,7 +279,8 @@
 		   <echo message="La variable TARGET_DIR_REPOSITORY_SOURCE_CODE_${i} no tiene valor" />
 		 </then>
 		 <else>
-			<addenvironmentvariable     
+			<addenvironmentvariable   
+				serverUrl="${OPENSHIFT_SERVER_URL}"	
 				userName="${OPENSHIFT_LOGIN}" 
 				password="${OPENSHIFT_PASSWORD}" 
 				domainName="${DOMAIN}" 
@@ -274,7 +294,8 @@
 	
 	<target name="create-app-project-no-backup" depends="-configureAnt">
 	
-		<createprojectapplication	
+		<createprojectapplication
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -302,6 +323,7 @@
 		</antcall>
 	
 		<deletecreatedatabase	
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -313,6 +335,7 @@
 	
 	<target name="deploy-project" depends="-configureAnt">
 		<configureserver
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -343,7 +366,8 @@
 			value="${PROJECT_NAME}-${APP_ENVIRONMENT}-DIA-${DIA_SEMANA}-${FILE_BACKUP}.zip" 
 		/>
 	
-		<applicationproperty     
+		<applicationproperty   
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -351,7 +375,8 @@
 			name="SSH_HOST" 
 			applicationProperty="SSHHost"
 		/>
-		<applicationproperty     
+		<applicationproperty  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -359,7 +384,8 @@
 			name="SSH_USER" 
 			applicationProperty="SSHUser"
 		/>
-		<applicationproperty     
+		<applicationproperty   
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -490,6 +516,7 @@
 		/>
 	
 		<applicationproperty     
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -497,7 +524,8 @@
 			name="SSH_HOST" 
 			applicationProperty="SSHHost"
 		/>
-		<applicationproperty     
+		<applicationproperty   
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -505,7 +533,8 @@
 			name="SSH_USER" 
 			applicationProperty="SSHUser"
 		/>
-		<applicationproperty     
+		<applicationproperty 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -578,6 +607,7 @@
 		/>
 	
 		<restartapplication 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -588,6 +618,7 @@
 
 	<target name="restart-project" depends="-configureAnt">
 		<restartapplication 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -596,6 +627,7 @@
 	</target>
 	<target name="restart-jenkins" depends="-configureAnt">
 		<restartapplication 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -608,7 +640,8 @@
 	</target>	
 	
 	<target name="show-info-jenkins" depends="-configureAnt">
-		<applicationproperty     
+		<applicationproperty 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -617,7 +650,8 @@
 			applicationProperty="SshUrl"
 		/>
 		
-		<applicationproperty     
+		<applicationproperty    
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -632,6 +666,7 @@
 		<echo>${GIT_JENKINS_URL}</echo>		
 		
 		<remote-exec   
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -641,7 +676,8 @@
 		/>		
 	</target>	
 	<target name="show-info-project" depends="-configureAnt">
-		<applicationproperty     
+		<applicationproperty 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -650,7 +686,8 @@
 			applicationProperty="SshUrl"
 		/>
 
-		<applicationproperty     
+		<applicationproperty
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
@@ -758,6 +795,7 @@
 		</if>
 	
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -768,6 +806,7 @@
 	</target>
 	<target name="show-log-files" depends="-configureAnt">
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -778,6 +817,7 @@
 		/>	
 		
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -791,6 +831,7 @@
 	
 	<target name="show-env-project" depends="-configureAnt">
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -801,6 +842,7 @@
 	</target>	
 	<target name="show-env-jenkins" depends="-configureAnt">
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -811,6 +853,7 @@
 	</target>
 	<target name="delete-log-files" depends="-configureAnt">
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -821,6 +864,7 @@
 		/>	
 		
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -831,6 +875,7 @@
 		/>			
 		
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -844,6 +889,7 @@
 	
 	<target name="show-ps-project" depends="-configureAnt">
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 
@@ -854,6 +900,7 @@
 	</target>	
 	<target name="show-ps-jenkins" depends="-configureAnt">
 		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}"  
 			domainName="${DOMAIN}" 

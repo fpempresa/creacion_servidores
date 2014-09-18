@@ -46,6 +46,7 @@
 			<then>
 				<property name="PRIVATE_KEY" value="${PRODUCCION_PRIVATE_KEY}" />
 				<property name="DOMAIN" value="${PRODUCCION_DOMAIN}" />
+				<property name="OPENSHIFT_SERVER_URL" value="${OPENSHIFT_PRODUCCION_SERVER_URL}" />
 				<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRODUCCION_LOGIN}" />
 				<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRODUCCION_PASSWORD}" />	
 				<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PRODUCCION_HOST_KEY}" />	
@@ -60,6 +61,7 @@
 				<then>
 					<property name="PRIVATE_KEY" value="${PREPRODUCCION_PRIVATE_KEY}" />
 					<property name="DOMAIN" value="${PREPRODUCCION_DOMAIN}" />
+				    <property name="OPENSHIFT_SERVER_URL" value="${OPENSHIFT_PREPRODUCCION_SERVER_URL}" />					
 					<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PREPRODUCCION_LOGIN}" />
 					<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PREPRODUCCION_PASSWORD}" />	
 					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PREPRODUCCION_HOST_KEY}" />
@@ -75,6 +77,7 @@
 				<then>
 					<property name="PRIVATE_KEY" value="${PRUEBAS_PRIVATE_KEY}" />
 					<property name="DOMAIN" value="${PRUEBAS_DOMAIN}" />
+					<property name="OPENSHIFT_SERVER_URL" value="${OPENSHIFT_PRUEBAS_SERVER_URL}" />
 					<property name="OPENSHIFT_LOGIN" value="${OPENSHIFT_PRUEBAS_LOGIN}" />
 					<property name="OPENSHIFT_PASSWORD" value="${OPENSHIFT_PRUEBAS_PASSWORD}" />	
 					<property name="LOGENTRIES_HOST_KEY" value="${LOGENTRIES_PRUEBAS_HOST_KEY}" />	
@@ -103,6 +106,7 @@
  
 
     <macrodef name="createdomainandkeys">
+	    <attribute name="serverUrl" />
         <attribute name="userName" />
         <attribute name="password"  />
         <attribute name="domainName"  />
@@ -111,13 +115,15 @@
 			<echo>Creando Dominio y claves en la cuenta "@{userName}" en dominio "@{domainName}"</echo>
 			
 			<echo>Borrando claves existentes</echo>
-			<removeallpublickeys 
+			<removeallpublickeys
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}"  
 			/>
 			
 			<echo>Borrando dominios</echo>
-			<destroyalldomains     
+			<destroyalldomains  
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				force="true" 
@@ -130,6 +136,7 @@
 			
 			<echo>Anyadiendo las calve publicas a la cuenta de Openshift</echo>
 			<addpublickey     
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				publicKeyName="ant" 
@@ -137,7 +144,8 @@
 			/>
 			
 			<echo>Creando el dominio @{domainName}</echo>
-			<createdomain     
+			<createdomain   
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -149,6 +157,7 @@
 	
 	
     <macrodef name="createprojectapplication">
+		<attribute name="serverUrl" />
         <attribute name="userName" />
         <attribute name="password"  />
         <attribute name="domainName"  />
@@ -159,7 +168,8 @@
 			
 			<trycatch property="exception" >
 				<try>
-					<destroyapplication     
+					<destroyapplication 
+						serverUrl="@{serverUrl}"
 						userName="@{userName}" 
 						password="@{password}" 
 						domainName="@{domainName}" 
@@ -174,7 +184,8 @@
 
 			
 			<echo>Creando la aplicacion @{applicationName}</echo>
-			<createapplication     
+			<createapplication   
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -185,7 +196,8 @@
 			/>
 			
 			<echo>Añadiendo variable de entorno OPENSHIFT_MYSQL_LOWER_CASE_TABLE_NAMES</echo>
-			<addenvironmentvariable     
+			<addenvironmentvariable
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -195,7 +207,8 @@
 			/>	
 			
 			<echo>Añadiendo variable de entorno NEW_RELIC_LICENSE_KEY</echo>
-			<addenvironmentvariable     
+			<addenvironmentvariable
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -205,7 +218,8 @@
 			/>
 			
 			<echo>Añadiendo variable de entorno LOGENTRIES_LICENSE_KEY</echo>
-			<addenvironmentvariable     
+			<addenvironmentvariable 
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -215,7 +229,8 @@
 			/>
 			
 			<echo>Añadiendo variable de entorno LOGENTRIES_HOST_KEY</echo>
-			<addenvironmentvariable     
+			<addenvironmentvariable 
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -225,7 +240,8 @@
 			/>
 			
 			<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
-			<addenvironmentvariable     
+			<addenvironmentvariable 
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -235,7 +251,8 @@
 			/>
 			
 			<echo>Anyadiendo Base de datos</echo>
-			<addcartridge     
+			<addcartridge   
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -249,6 +266,7 @@
     </macrodef> 
 	
     <macrodef name="deletecreatedatabase">
+		<attribute name="serverUrl" />
         <attribute name="userName" />
         <attribute name="password"  />
         <attribute name="domainName"  />
@@ -258,7 +276,8 @@
 			
 			<trycatch property="exception" >
 				<try>
-					<removecartridge     
+					<removecartridge 
+						serverUrl="@{serverUrl}"
 						userName="@{userName}" 
 						password="@{password}" 
 						domainName="@{domainName}" 
@@ -270,7 +289,8 @@
 					<echo>No se pudo borrar el cartucho mysql en la aplicacion @{applicationName} del dominio @{applicationName}</echo>
 				</catch>
 			</trycatch>	
-			<addcartridge     
+			<addcartridge
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -282,6 +302,7 @@
 	
 	
     <macrodef name="configureserver">
+		<attribute name="serverUrl" />
         <attribute name="userName" />
         <attribute name="password"  />
         <attribute name="domainName"  />
@@ -303,7 +324,8 @@
 			<mkdir dir="@{gitlocalpath}" />
 		
 			<echo>Clonando repositorio git del servidor en OpenShift</echo>
-			<gitcloneapplication     
+			<gitcloneapplication 
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -360,7 +382,8 @@
 			
 			<echo>Iniciando push a OpenShift</echo>
 			
-			<gitpushapplication     
+			<gitpushapplication  
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -414,6 +437,7 @@
 	</macrodef>
 	
     <macrodef name="remote-exec">
+		<attribute name="serverUrl" />
         <attribute name="userName" />
         <attribute name="password"  />
         <attribute name="domainName"  />
@@ -427,6 +451,7 @@
 			<local name="SSH_PORT"/>
 		
 			<applicationproperty     
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -434,7 +459,8 @@
 				name="SSH_HOST" 
 				applicationProperty="SSHHost"
 			/>
-			<applicationproperty     
+			<applicationproperty
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
@@ -442,7 +468,8 @@
 				name="SSH_USER" 
 				applicationProperty="SSHUser"
 			/>
-			<applicationproperty     
+			<applicationproperty  
+				serverUrl="@{serverUrl}"
 				userName="@{userName}" 
 				password="@{password}" 
 				domainName="@{domainName}" 
