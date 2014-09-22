@@ -15,13 +15,15 @@ en el fichero `../private/proyecto.properties` .Este fichero se obtendrá que un
 	SERVICES_MASTER_EMAIL=
 	PROJECT_NAME=
 
-
+	OPENSHIFT_PRODUCCION_SERVER_URL=
 	OPENSHIFT_PRODUCCION_LOGIN=
 	OPENSHIFT_PRODUCCION_PASSWORD=
 
+	OPENSHIFT_PREPRODUCCION_SERVER_URL=
 	OPENSHIFT_PREPRODUCCION_LOGIN=
 	OPENSHIFT_PREPRODUCCION_PASSWORD=
 
+	OPENSHIFT_PRUEBAS_SERVER_URL=
 	OPENSHIFT_PRUEBAS_LOGIN=
 	OPENSHIFT_PRUEBAS_PASSWORD=
 
@@ -56,7 +58,7 @@ en el fichero `../private/proyecto.properties` .Este fichero se obtendrá que un
     GIT_REPOSITORY_SOURCE_CODE_8=
     GIT_REPOSITORY_SOURCE_CODE_9=
     
-	#Este directorio debe tener el mismo valor que PROJECT_NAME
+	#Este primer directorio debe tener el mismo valor que PROJECT_NAME
     TARGET_DIR_REPOSITORY_SOURCE_CODE_1=fpempresa
     TARGET_DIR_REPOSITORY_SOURCE_CODE_2=ix3
     TARGET_DIR_REPOSITORY_SOURCE_CODE_3=ix3security
