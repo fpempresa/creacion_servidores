@@ -73,7 +73,7 @@ while : ; do
         if [ "$account" == "" ]; then
                 break
         else
-                htpasswd -c /etc/openshift/htpasswd $account
+                htpasswd /etc/openshift/htpasswd $account
         fi
 done
 
