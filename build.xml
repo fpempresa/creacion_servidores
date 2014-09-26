@@ -615,6 +615,14 @@
 			command="rm /tmp/${FILE_BACKUP}.sql"
 		/>
 	
+	
+		<stopapplication  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>
 		<startapplication  
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
@@ -622,42 +630,41 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}" 
 		/>
-		<stopapplication  
-			serverUrl="${OPENSHIFT_SERVER_URL}"	
-			userName="${OPENSHIFT_LOGIN}" 
-			password="${OPENSHIFT_PASSWORD}" 
-			domainName="${DOMAIN}" 
-			applicationName="${APPLICATION}" 
-		/>		
+		
 	
 	</target>
 
 	<target name="restart-project" depends="-configureAnt">
-		<startapplication  
-			serverUrl="${OPENSHIFT_SERVER_URL}"	
-			userName="${OPENSHIFT_LOGIN}" 
-			password="${OPENSHIFT_PASSWORD}" 
-			domainName="${DOMAIN}" 
-			applicationName="${APPLICATION}" 
-		/>
+	
 		<stopapplication  
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}" 
-		/>	
-	</target>
-	<target name="restart-jenkins" depends="-configureAnt">
+		/>
 		
 		<startapplication  
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>
+
+
+	
+	</target>
+	<target name="restart-jenkins" depends="-configureAnt">
+		
+		<stopapplication
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}" 
 		/>
-		<stopapplication  
+		<startapplication    
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
