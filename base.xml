@@ -54,7 +54,9 @@
 				<property name="DOMAIN_NAME_1" value="${DOMAIN_NAME_PRODUCCION_1}" />
 				<property name="DOMAIN_NAME_2" value="${DOMAIN_NAME_PRODUCCION_2}" />
 				<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PRODUCCION_3}" />
-				<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRODUCCION_4}" />				
+				<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRODUCCION_4}" />
+				
+				<property name="APP_GEAR_SIZE" value="small" />	
 			</then>
 			<elseif>
 				<equals arg1="${APP_ENVIRONMENT}" arg2="PREPRODUCCION" />
@@ -69,7 +71,9 @@
 					<property name="DOMAIN_NAME_1" value="${DOMAIN_NAME_PREPRODUCCION_1}" />
 					<property name="DOMAIN_NAME_2" value="${DOMAIN_NAME_PREPRODUCCION_2}" />
 					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PREPRODUCCION_3}" />
-					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PREPRODUCCION_4}" />					
+					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PREPRODUCCION_4}" />
+
+					<property name="APP_GEAR_SIZE" value="micro" />	
 				</then>
 			</elseif>
 			<elseif>
@@ -85,7 +89,9 @@
 					<property name="DOMAIN_NAME_1" value="${DOMAIN_NAME_PRUEBAS_1}" />
 					<property name="DOMAIN_NAME_2" value="${DOMAIN_NAME_PRUEBAS_2}" />
 					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PRUEBAS_3}" />
-					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRUEBAS_4}" />										
+					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRUEBAS_4}" />	
+
+					<property name="APP_GEAR_SIZE" value="micro" />
 				</then>
 			</elseif>
 			<elseif>

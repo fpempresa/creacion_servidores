@@ -309,6 +309,7 @@
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}" 
+			gearProfileName="${APP_GEAR_PROFILE_NAME}"
 		/>
 		<antcall target="addallalias">
 		</antcall>	
