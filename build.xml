@@ -246,13 +246,22 @@
 		
 
 		
-		<restartapplication 
+		<stopapplication   
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}" 
 		/>
+		<startapplication  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}" 
+		/>		
+		
+		
 	</target>	
 	
 	<target name="-set-git-source-code-environment-variable">
@@ -606,18 +615,32 @@
 			command="rm /tmp/${FILE_BACKUP}.sql"
 		/>
 	
-		<restartapplication 
+		<startapplication  
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}" 
 		/>
+		<stopapplication  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>		
 	
 	</target>
 
 	<target name="restart-project" depends="-configureAnt">
-		<restartapplication 
+		<startapplication  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${APPLICATION}" 
+		/>
+		<stopapplication  
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
@@ -626,13 +649,23 @@
 		/>	
 	</target>
 	<target name="restart-jenkins" depends="-configureAnt">
-		<restartapplication 
+		
+		<startapplication  
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
 			password="${OPENSHIFT_PASSWORD}" 
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}" 
-		/>	
+		/>
+		<stopapplication  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}" 
+		/>
+		
+		
 	</target>	
 	
 	<target name="show-info" depends="-configureAnt,show-info-jenkins,show-env-jenkins,show-ps-jenkins,show-info-project,show-env-project,show-ps-project">
