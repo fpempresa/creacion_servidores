@@ -56,7 +56,7 @@
 				<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PRODUCCION_3}" />
 				<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRODUCCION_4}" />
 				
-				<property name="APP_GEAR_SIZE" value="small" />	
+				<property name="APP_GEAR_PROFILE_NAME" value="small" />	
 			</then>
 			<elseif>
 				<equals arg1="${APP_ENVIRONMENT}" arg2="PREPRODUCCION" />
@@ -73,7 +73,7 @@
 					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PREPRODUCCION_3}" />
 					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PREPRODUCCION_4}" />
 
-					<property name="APP_GEAR_SIZE" value="micro" />	
+					<property name="APP_GEAR_PROFILE_NAME" value="micro" />	
 				</then>
 			</elseif>
 			<elseif>
@@ -91,7 +91,7 @@
 					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PRUEBAS_3}" />
 					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRUEBAS_4}" />	
 
-					<property name="APP_GEAR_SIZE" value="micro" />
+					<property name="APP_GEAR_PROFILE_NAME" value="micro" />
 				</then>
 			</elseif>
 			<elseif>
@@ -168,6 +168,7 @@
         <attribute name="password"  />
         <attribute name="domainName"  />
         <attribute name="applicationName" />
+		<attribute name="gearProfileName" />
         <sequential>
 			<echo>Creando Aplicación en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>
 			
@@ -197,7 +198,7 @@
 				domainName="@{domainName}" 
 				applicationName="@{applicationName}"  
 				cartridgeName="jbossews-2.0"
-				gearProfileName="small"
+				gearProfileName="@{gearProfileName}"
 				scalable="true"
 			/>
 			
