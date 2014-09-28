@@ -73,7 +73,7 @@
 					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PREPRODUCCION_3}" />
 					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PREPRODUCCION_4}" />
 
-					<property name="APP_GEAR_PROFILE_NAME" value="medium" />	
+					<property name="APP_GEAR_PROFILE_NAME" value="small" />	
 				</then>
 			</elseif>
 			<elseif>
@@ -91,7 +91,7 @@
 					<property name="DOMAIN_NAME_3" value="${DOMAIN_NAME_PRUEBAS_3}" />
 					<property name="DOMAIN_NAME_4" value="${DOMAIN_NAME_PRUEBAS_4}" />	
 
-					<property name="APP_GEAR_PROFILE_NAME" value="medium" />
+					<property name="APP_GEAR_PROFILE_NAME" value="small" />
 				</then>
 			</elseif>
 			<elseif>
