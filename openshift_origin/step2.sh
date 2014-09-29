@@ -10,7 +10,7 @@ rm -f kernel-2.6.32-431.29.2.el6.centos.plus.x86_64.rpm
 yum -y install unzip curl
 yum clean all
 yum check-update
-yum update
+yum -y update
 
 
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
