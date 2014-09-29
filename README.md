@@ -92,7 +92,7 @@ Los posibles valores son `PRODUCCION` , `PREPRODUCCION` o `PRUEBAS`
 
 Por ejemplo en Windows ejecutar
 
-	APP_ENVIRONMENT=PRODUCCION
+	set APP_ENVIRONMENT=PRODUCCION
 	
 Por ejemplo en Linux ejecutar
 
