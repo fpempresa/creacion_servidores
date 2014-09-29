@@ -1,10 +1,21 @@
 # creacion_servidores
 
+Script para la creación de todos los servidores de con OpenShift
 
-Script para la creación de todos los servidores de FPempresa
+## Instalar OpenShift Origin
+Pasos para instalar openShift Origin en un VPS de OVH (aunque debería valer para cualquier VPS)
 
-## Prerequisitos
-Es necesario tener instalado Git, el JDK 7 y la herramienta Apache Ant
+```
+#Cambiar la Nueva contraseña del VPS pq tiene viene por defecto
+passwd
+yum -y install git
+git clone https://github.com/fpempresa/creacion_servidores.git
+cd creacion_servidores/openshift_origin
+./step1.sh
+#Aqui se habra reiniciado la maquina.
+cd creacion_servidores/openshift_origin
+./step2.sh
+```
 
 ## Configuracion 
 Antes de poder ejecutar el Scrip de cracion de los servidores es necesario definir las siguientes propiedades
@@ -118,4 +129,15 @@ Es necesario crear previamente los servidores `app-pro$PROJECT_NAME` , `app-pre$
 Obteniendo las claves de los servidores. Está en la URL en el parametro `id`.
 
 Tambien es necesaria la licencia del usuario.
+
+##Trucos
+Utilidades para usar en OpenShift
+
+### Ver el % de memoria usada. Se debe lanzar en el propio Gear
+
+	echo `awk "BEGIN{printf \"%i\", $(oo-cgroup-read memory.usage_in_bytes) / $(oo-cgroup-read memory.limit_in_bytes) * 100}"`
+  
+### Ver únicamente los procesos del propio gear. Ordenados por uso de memoria y mostrando la memoria usada.
+
+	ps -eo pid,pmem,rss,vsz,cgroup,cmd  --sort -pmem,-rss,-vsz | grep "${OPENSHIFT_GEAR_UUID}"
 
