@@ -784,13 +784,13 @@
 			<elseif>
 				<equals arg1="${LOG_TYPE}" arg2="localhost" />
 				<then>
-					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.txt" />	
+					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.log" />	
 				</then>
 			</elseif>
 			<elseif>
 				<equals arg1="${LOG_TYPE}" arg2="manager" />
 				<then>	
-					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.txt" />	
+					<property name="LOG_FILE" value="$OPENSHIFT_JBOSSEWS_DIR/logs/${LOG_TYPE}.${LOG_DATE}.log" />	
 				</then>
 			</elseif>
 			<elseif>
