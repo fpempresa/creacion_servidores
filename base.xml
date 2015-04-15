@@ -215,37 +215,64 @@
 			/>	
 			
 			<echo>Añadiendo variable de entorno NEW_RELIC_LICENSE_KEY</echo>
-			<addenvironmentvariable
-				serverUrl="@{serverUrl}"
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				environmentVariableName="NEW_RELIC_LICENSE_KEY" 
-				environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
-			/>
+			<if>
+			 <equals arg1="${NEW_RELIC_LICENSE_KEY}" arg2="" />
+			 <then>
+			   <echo message="La variable ${NEW_RELIC_LICENSE_KEY} no tiene valor" />
+			 </then>
+			 <else>
+				<addenvironmentvariable
+					serverUrl="@{serverUrl}"
+					userName="@{userName}" 
+					password="@{password}" 
+					domainName="@{domainName}" 
+					applicationName="@{applicationName}"  
+					environmentVariableName="NEW_RELIC_LICENSE_KEY" 
+					environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
+				/>
+			 </else>
+			</if>			
+			
+
 			
 			<echo>Añadiendo variable de entorno LOGENTRIES_LICENSE_KEY</echo>
-			<addenvironmentvariable 
-				serverUrl="@{serverUrl}"
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				environmentVariableName="LOGENTRIES_LICENSE_KEY" 
-				environmentVariableValue="${LOGENTRIES_LICENSE_KEY}"
-			/>
+			<if>
+			 <equals arg1="${LOGENTRIES_LICENSE_KEY}" arg2="" />
+			 <then>
+			   <echo message="La variable ${LOGENTRIES_LICENSE_KEY} no tiene valor" />
+			 </then>
+			 <else>			
+				<addenvironmentvariable 
+					serverUrl="@{serverUrl}"
+					userName="@{userName}" 
+					password="@{password}" 
+					domainName="@{domainName}" 
+					applicationName="@{applicationName}"  
+					environmentVariableName="LOGENTRIES_LICENSE_KEY" 
+					environmentVariableValue="${LOGENTRIES_LICENSE_KEY}"
+				/>
+			 </else>
+			</if>			
+			
 			
 			<echo>Añadiendo variable de entorno LOGENTRIES_HOST_KEY</echo>
-			<addenvironmentvariable 
-				serverUrl="@{serverUrl}"
-				userName="@{userName}" 
-				password="@{password}" 
-				domainName="@{domainName}" 
-				applicationName="@{applicationName}"  
-				environmentVariableName="LOGENTRIES_HOST_KEY" 
-				environmentVariableValue="${LOGENTRIES_HOST_KEY}"
-			/>
+			<if>
+			 <equals arg1="${LOGENTRIES_HOST_KEY}" arg2="" />
+			 <then>
+			   <echo message="La variable ${LOGENTRIES_HOST_KEY} no tiene valor" />
+			 </then>
+			 <else>				
+				<addenvironmentvariable 
+					serverUrl="@{serverUrl}"
+					userName="@{userName}" 
+					password="@{password}" 
+					domainName="@{domainName}" 
+					applicationName="@{applicationName}"  
+					environmentVariableName="LOGENTRIES_HOST_KEY" 
+					environmentVariableValue="${LOGENTRIES_HOST_KEY}"
+				/>
+			 </else>
+			</if>	
 			
 			<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
 			<addenvironmentvariable 
