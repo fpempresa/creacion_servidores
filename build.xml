@@ -229,7 +229,7 @@
 		/>
 	</target>
 
-	
+
 	<target name="deploy-jenkins" depends="-configureAnt">
 	
 		<configureserver
@@ -301,7 +301,7 @@
 		 </else>
 		</if>
 	</target>	
-	
+		
 	<target name="create-app-project-no-backup" depends="-configureAnt">
 	
 		<createprojectapplication
@@ -636,6 +636,82 @@
 	
 	</target>
 
+	<target name="create-app-sonar" depends="-configureAnt">
+		<trycatch property="exception" >
+			<try>
+				<destroyapplication  
+					serverUrl="${OPENSHIFT_SERVER_URL}"	
+					userName="${OPENSHIFT_LOGIN}" 
+					password="${OPENSHIFT_PASSWORD}" 
+					domainName="${DOMAIN}" 
+					applicationName="${SONAR}"  
+				/>
+			</try>
+			<catch>
+				<echo>No se pudo borrar la aplicación ${SONAR}</echo>
+			</catch>
+		</trycatch>	
+
+		<createpsonarapplication     
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}"  
+			gearProfileName="small"
+
+		/>
+		
+		<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
+		<addenvironmentvariable  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${JENKINS}"
+			environmentVariableName="APP_ENVIRONMENT" 
+			environmentVariableValue="${APP_ENVIRONMENT}"
+		/>
+		
+	</target>	
+	
+	<target name="deploy-sonar" depends="-configureAnt">
+	
+		<configureserver
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}"
+			privateKeyFile="${PRIVATE_KEY}"
+			gitRepository="${GIT_REPOSITORY_SONAR}"
+		>		
+			
+		    <foreach target="-set-git-source-code-environment-variable" param="i" list="1,2,3,4,5,6,7,8,9" inheritall="true" inheritrefs="true" />	
+		</configureserver>	
+		
+
+		
+		<stopapplication   
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}" 
+		/>
+		<startapplication  
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}" 
+		/>		
+		
+		
+	</target>	
+	
+	
+	
 	<target name="restart-project" depends="-configureAnt">
 	
 		<stopapplication  
@@ -677,7 +753,27 @@
 		
 	</target>	
 	
-	<target name="show-info" depends="-configureAnt,show-info-jenkins,show-env-jenkins,show-ps-jenkins,show-info-project,show-env-project,show-ps-project">
+	<target name="restart-sonar" depends="-configureAnt">
+		
+		<stopapplication
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}" 
+		/>
+		<startapplication    
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}" 
+		/>
+		
+		
+	</target>	
+	
+	<target name="show-info" depends="-configureAnt,show-info-jenkins,show-env-jenkins,show-ps-jenkins,show-info-project,show-env-project,show-ps-project,show-info-sonar,show-env-sonar,show-ps-sonar">
 		
 	</target>	
 	
@@ -744,7 +840,32 @@
 		<echo>${GIT_PROJECT_URL}</echo>			
 	</target>	
 	
+	<target name="show-info-sonar" depends="-configureAnt">
+		<applicationproperty 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}"  
+			name="SSH_SONAR_URL" 
+			applicationProperty="SshUrl"
+		/>
 
+		<applicationproperty
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}" 
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}"  
+			name="GIT_SONAR_URL" 
+			applicationProperty="GitUrl"
+		/>
+		
+		<echo>SSH URL del domino ${DOMAIN} en aplicacion ${SONAR}</echo>
+		<echo>${SSH_SONAR_URL}</echo>		
+		<echo>Git URL del domino ${DOMAIN} en aplicacion ${SONAR}</echo>
+		<echo>${GIT_SONAR_URL}</echo>			
+	</target>	
 	
 	<target name="view-log" depends="-configureAnt">
 		<!-- Depende de las propiedades:
@@ -893,6 +1014,20 @@
 			cmd="env | sort"
 		/>	
 	</target>
+	
+	<target name="show-env-sonar" depends="-configureAnt">
+		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}"
+			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
+			cmd="env | sort"
+		/>	
+	</target>	
+	
 	<target name="delete-log-files" depends="-configureAnt">
 		<remote-exec 
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
@@ -925,7 +1060,19 @@
 			privateKeyFile="${PRIVATE_KEY}"
 			failonerror="no"
 			cmd="rm -v $OPENSHIFT_JENKINS_LOG_DIR/*.log"
-		/>		
+		/>	
+
+		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}"
+			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
+			cmd="rm -v $OPENSHIFT_DIY_LOG_DIR/*.log"
+		/>	
+		
 		
 	</target>	
 	
@@ -951,5 +1098,16 @@
 			cmd="ps -eo pid,cmd"
 		/>	
 	</target>	
-	
+	<target name="show-ps-sonar" depends="-configureAnt">
+		<remote-exec 
+			serverUrl="${OPENSHIFT_SERVER_URL}"	
+			userName="${OPENSHIFT_LOGIN}" 
+			password="${OPENSHIFT_PASSWORD}"  
+			domainName="${DOMAIN}" 
+			applicationName="${SONAR}"
+			privateKeyFile="${PRIVATE_KEY}"
+			failonerror="no"
+			cmd="ps -eo pid,cmd"
+		/>	
+	</target>		
 </project>

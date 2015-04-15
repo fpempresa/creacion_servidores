@@ -140,4 +140,13 @@ Utilidades para usar en OpenShift
 ### Ver únicamente los procesos del propio gear. Ordenados por uso de memoria y mostrando la memoria usada.
 
 	ps -eo pid,pmem,rss,vsz,cgroup,cmd  --sort -pmem,-rss,-vsz | grep "${OPENSHIFT_GEAR_UUID}"
+	
+### Acceder a la página de administración.
+
+Contectase por SSH a la propia máquina con roo/contraseña pero redirigiendo el puerto 8080 a localhost:8080
+
+Y navegar entonces a:
+
+http://localhost:8080/admin-console
+
 

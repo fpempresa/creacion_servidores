@@ -35,6 +35,7 @@
 		
 		<property name="JENKINS" value="jenkins" />
 		<property name="APPLICATION" value="app" />
+		<property name="SONAR" value="sonar" />
 		
 		<!-- Si no está definida la variable la cojemos como variable de entorno -->
 		<property name="env.APP_ENVIRONMENT" value="" />
@@ -405,6 +406,84 @@
         </sequential>
     </macrodef> 	
 	
+	
+    <macrodef name="createpsonarapplication">
+		<attribute name="serverUrl" />
+        <attribute name="userName" />
+        <attribute name="password"  />
+        <attribute name="domainName"  />
+        <attribute name="applicationName" />
+		<attribute name="gearProfileName" />
+        <sequential>
+			<echo>Creando Aplicación en la cuenta "@{userName}"  en dominio "@{domainName}" y nombre de applicacion "@{applicationName}"</echo>
+			
+			
+			<trycatch property="exception" >
+				<try>
+					<destroyapplication 
+						serverUrl="@{serverUrl}"
+						userName="@{userName}" 
+						password="@{password}" 
+						domainName="@{domainName}" 
+						applicationName="@{applicationName}"   
+					/>
+				</try>
+				<catch>
+					<echo>No se pudo borrar la aplicación @{applicationName}</echo>
+				</catch>
+			</trycatch>			
+			
+
+			
+			<echo>Creando la aplicacion @{applicationName}</echo>
+			<createapplication   
+				serverUrl="@{serverUrl}"
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				cartridgeName="diy-0.1"
+				gearProfileName="@{gearProfileName}"
+				scalable="false"
+			/>
+			
+			
+			<echo>Añadiendo variable de entorno NEW_RELIC_LICENSE_KEY</echo>
+			<addenvironmentvariable
+				serverUrl="@{serverUrl}"
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				environmentVariableName="NEW_RELIC_LICENSE_KEY" 
+				environmentVariableValue="${NEW_RELIC_LICENSE_KEY}"
+			/>
+			
+			<echo>Añadiendo variable de entorno APP_ENVIRONMENT</echo>
+			<addenvironmentvariable 
+				serverUrl="@{serverUrl}"
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				environmentVariableName="APP_ENVIRONMENT" 
+				environmentVariableValue="${APP_ENVIRONMENT}"
+			/>
+			
+			<echo>Anyadiendo Base de datos</echo>
+			<addcartridge   
+				serverUrl="@{serverUrl}"
+				userName="@{userName}" 
+				password="@{password}" 
+				domainName="@{domainName}" 
+				applicationName="@{applicationName}"  
+				cartridgeName="postgresql-9.2" 
+			/>
+
+			<echo>Finalizado la creacion del servidor de aplicaciones</echo>
+			
+        </sequential>
+    </macrodef> 	
 	
     <macrodef name="createkeysrepository">
         <attribute name="privateKeyFile" />
