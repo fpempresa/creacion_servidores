@@ -975,7 +975,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="ls -l $OPENSHIFT_JBOSSEWS_DIR/logs"
 		/>	
 		
@@ -986,7 +986,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="ls -l $OPENSHIFT_LOG_DIR"
 		/>			
 		
@@ -1023,7 +1023,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${SONAR}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="env | sort"
 		/>	
 	</target>	
@@ -1036,7 +1036,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="rm -v $OPENSHIFT_JBOSSEWS_DIR/logs/*.txt"
 		/>	
 		
@@ -1047,7 +1047,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${APPLICATION}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="rm -v $OPENSHIFT_LOG_DIR/*.log"
 		/>			
 		
@@ -1058,7 +1058,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${JENKINS}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="rm -v $OPENSHIFT_JENKINS_LOG_DIR/*.log"
 		/>	
 
@@ -1069,7 +1069,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${SONAR}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="rm -v $OPENSHIFT_DIY_LOG_DIR/*.log"
 		/>	
 		
@@ -1106,7 +1106,7 @@
 			domainName="${DOMAIN}" 
 			applicationName="${SONAR}"
 			privateKeyFile="${PRIVATE_KEY}"
-			failonerror="no"
+			failonerror="false"
 			cmd="ps -eo pid,cmd"
 		/>	
 	</target>		
