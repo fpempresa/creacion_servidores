@@ -1062,6 +1062,7 @@
 			cmd="rm -v $OPENSHIFT_JENKINS_LOG_DIR/*.log"
 		/>	
 
+<!--		
 		<remote-exec 
 			serverUrl="${OPENSHIFT_SERVER_URL}"	
 			userName="${OPENSHIFT_LOGIN}" 
@@ -1072,7 +1073,7 @@
 			failonerror="false"
 			cmd="rm -v $OPENSHIFT_DIY_LOG_DIR/*.log"
 		/>	
-		
+-->
 		
 	</target>	
 	
