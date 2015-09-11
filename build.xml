@@ -300,6 +300,23 @@
 			/>		
 		 </else>
 		</if>
+		<if>
+		 <equals arg1="${GIT_BRANCH_SOURCE_CODE_${i}}" arg2="" />
+		 <then>
+		   <echo message="La variable GIT_BRANCH_SOURCE_CODE_${i} no tiene valor" />
+		 </then>
+		 <else>
+			<addenvironmentvariable   
+				serverUrl="${OPENSHIFT_SERVER_URL}"	
+				userName="${OPENSHIFT_LOGIN}" 
+				password="${OPENSHIFT_PASSWORD}" 
+				domainName="${DOMAIN}" 
+				applicationName="${JENKINS}"
+				environmentVariableName="GIT_BRANCH_SOURCE_CODE_${i}" 
+				environmentVariableValue="${GIT_BRANCH_SOURCE_CODE_${i}}"
+			/>		
+		 </else>
+		</if>		
 	</target>	
 		
 	<target name="create-app-project-no-backup" depends="-configureAnt">
