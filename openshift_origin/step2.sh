@@ -79,6 +79,8 @@ while : ; do
                 break
         else
                 htpasswd /etc/openshift/htpasswd $account
+				oo-admin-ctl-user -l $account  --allowprivatesslcertificates true
+
         fi
 done
 
