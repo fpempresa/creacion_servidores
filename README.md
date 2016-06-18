@@ -161,4 +161,6 @@ http://localhost:8080/admin-console
 	oo-admin-ctl-user -c -l prufpempresa@fpmislata.com
 	oo-admin-ctl-user -l prufpempresa@fpmislata.com  --allowprivatesslcertificates true
 
+### Documentación de OpenShift 2
 
+[OpenShift 2 Command Reference](https://access.redhat.com/documentation/en-US/OpenShift_Enterprise/2/html/Administration_Guide/chap-Command_Reference.html)
