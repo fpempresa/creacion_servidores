@@ -150,13 +150,15 @@ Y navegar entonces a:
 http://localhost:8080/admin-console
 
 ### Borrar el usuario prufpempresa@fpmislata.com
-oo-admin-ctl-domain -l prufpempresa@fpmislata.com -c delete
-htpasswd -D /etc/openshift/htpasswd prufpempresa@fpmislata.com
+
+	oo-admin-ctl-domain -l prufpempresa@fpmislata.com -c delete
+	htpasswd -D /etc/openshift/htpasswd prufpempresa@fpmislata.com
 
 
 ### Crear el usuario prufpempresa@fpmislata.com
-htpasswd /etc/openshift/htpasswd prufpempresa@fpmislata.com
-oo-admin-ctl-user -c -l prufpempresa@fpmislata.com
-oo-admin-ctl-user -l prufpempresa@fpmislata.com  --allowprivatesslcertificates true
+
+	htpasswd /etc/openshift/htpasswd prufpempresa@fpmislata.com
+	oo-admin-ctl-user -c -l prufpempresa@fpmislata.com
+	oo-admin-ctl-user -l prufpempresa@fpmislata.com  --allowprivatesslcertificates true
 
 
