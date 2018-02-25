@@ -12,7 +12,7 @@ vi /etc/yum.repos.d/CentOS-Base.repo
 yum -y install git
 
 
-#Es por un error de git con github el 25/02/2018
+#Es por un error de git con github el 25/02/2018 . https://stackoverflow.com/questions/48938385/github-unable-to-access-ssl-connect-error
 yum update -y nss curl libcurl
 
 #Actualizar la version de git a la 1.9.1
