@@ -8,6 +8,7 @@ Pasos para instalar openShift Origin en un VPS de OVH (aunque debería valer par
 ```
 #Cambiar la Nueva contraseña del VPS pq tiene viene por defecto
 passwd
+yum update
 yum -y install git
 git clone https://github.com/fpempresa/creacion_servidores.git
 cd creacion_servidores/openshift_origin
