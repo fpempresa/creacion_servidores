@@ -16,7 +16,7 @@ yum -y update
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 yum -y install puppet
 
-echo Instalar la version local de openshift o bajarla de internet (l para la local y cualquier otra letra para bajarla de internet)
+echo "Instalar la version local de openshift o bajarla de internet (l para la local y cualquier otra letra para bajarla de internet)"
 read installlocal
 if [ "$installlocal" == "l" ]; then
   ./install_local_openshift_origin.sh
